@@ -1,0 +1,125 @@
+buildscript {
+    ext {
+        springBootVersion = '3.2.4'
+    }
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath "org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}"
+        classpath "io.spring.gradle:dependency-management-plugin:1.0.11.RELEASE"
+    }
+}
+
+// 하위 모든 프로젝트 공통 세팅
+subprojects {
+    apply plugin: 'java'
+    apply plugin: 'idea'
+    apply plugin: 'org.springframework.boot'
+    apply plugin: 'io.spring.dependency-management'
+
+    group 'io.spring'
+    version '1.0-SNAPSHOT'
+
+    sourceCompatibility = '17'
+    targetCompatibility = '17'
+    compileJava.options.encoding = 'UTF-8'
+
+    repositories {
+        mavenCentral()
+    }
+
+    // 하위 모듈에서 공통으로 사용하는 세팅 추가
+    dependencies {
+        compileOnly 'org.projectlombok:lombok'
+        testCompileOnly 'org.projectlombok:lombok'
+        annotationProcessor 'org.projectlombok:lombok'
+
+        implementation 'org.springframework.boot:spring-boot-configuration-processor'
+        testImplementation 'org.assertj:assertj-core:3.25.3'
+        testImplementation 'org.junit.jupiter:junit-jupiter'
+    }
+
+    test {
+        useJUnitPlatform()
+    }
+}
+
+project(':core:core-api') {
+    bootJar { enabled = true }
+    jar { enabled = true }
+
+    dependencies {
+        implementation project(":core:core-domain")
+        implementation project(":core:core-authorization")
+        implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+        runtimeOnly project(":storage:db-jpa")
+        runtimeOnly project(":storage:db-redis")
+        runtimeOnly project(":external-api")
+        implementation 'org.springframework.boot:spring-boot-starter-web'
+        testImplementation 'org.springframework.boot:spring-boot-starter-test'
+        implementation("org.springframework.boot:spring-boot-starter-validation")
+
+    }
+}
+
+project(':core:core-domain') {
+    bootJar { enabled = false }
+    jar { enabled = true }
+
+    dependencies {
+        implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+        implementation 'org.springframework.boot:spring-boot-starter-web'
+    }
+}
+
+project(':core:core-authorization') {
+    bootJar { enabled = false }
+    jar { enabled = true }
+
+    dependencies {
+        implementation 'org.springframework.boot:spring-boot-starter-web'
+        implementation 'io.jsonwebtoken:jjwt:0.12.5'
+    }
+}
+
+project(':storage:db-jpa') {
+    bootJar { enabled = false }
+    jar { enabled = true }
+
+    dependencies {
+        implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+        runtimeOnly 'com.h2database:h2'
+        testImplementation 'org.springframework.boot:spring-boot-starter-test'
+        compileOnly project(":core:core-domain")
+    }
+}
+
+project(':external-api') {
+    bootJar { enabled = false }
+    jar { enabled = true }
+
+    dependencies {
+        implementation 'org.springframework.boot:spring-boot-starter-web'
+        implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+        implementation 'com.squareup.retrofit2:converter-jackson:2.9.0'
+        implementation 'com.squareup.okhttp3:logging-interceptor:4.12.0'
+        testImplementation 'org.springframework.boot:spring-boot-starter-test'
+        compileOnly project(":core:core-domain")
+    }
+}
+
+project(':storage:db-redis') {
+    bootJar { enabled = false }
+    jar { enabled = true }
+
+    dependencies {
+        implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+        implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+        implementation 'org.springframework.boot:spring-boot-starter-web'
+        implementation 'com.github.codemonstur:embedded-redis:1.4.3'
+        compileOnly project(":core:core-domain")
+    }
+}
+
+
