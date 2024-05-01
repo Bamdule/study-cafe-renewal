@@ -4,8 +4,8 @@ import io.spring.studycafe.applcation.paymentmethod.card.CardRegistrationCommand
 import io.spring.studycafe.applcation.paymentmethod.card.CardRegistrationResult;
 import io.spring.studycafe.applcation.paymentmethod.card.CardRegistrationService;
 import io.spring.studycafe.applcation.paymentmethod.card.CardSearchService;
-import io.spring.studycafe.config.resolver.MemberAuthentication;
-import io.spring.studycafe.config.resolver.MemberInfo;
+import io.spring.studycafe.config.authorization.Authorization;
+import io.spring.studycafe.config.authorization.AuthorizationInfo;
 import io.spring.studycafe.domain.paymentmethod.card.CardPaymentAgency;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,9 +26,9 @@ public class PaymentMethodController {
     }
 
     @PostMapping
-    ResponseEntity<Object> registerPaymentMethod(@MemberAuthentication MemberInfo memberInfo) {
+    ResponseEntity<Object> registerPaymentMethod(@Authorization AuthorizationInfo authorizationInfo) {
         CardRegistrationResult result = cardRegistrationService.register(new CardRegistrationCommand(
-            memberInfo.id(),
+            authorizationInfo.id(),
             CardPaymentAgency.NICEPAY,
             "",
             "",
@@ -41,7 +41,7 @@ public class PaymentMethodController {
     }
 
     @GetMapping
-    ResponseEntity<Object> searchPaymentMethod(@MemberAuthentication MemberInfo memberInfo) {
-        return ResponseEntity.ok(cardSearchService.search(memberInfo.id()));
+    ResponseEntity<Object> searchPaymentMethod(@Authorization AuthorizationInfo authorizationInfo) {
+        return ResponseEntity.ok(cardSearchService.search(authorizationInfo.id()));
     }
 }

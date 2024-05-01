@@ -1,4 +1,4 @@
-package io.spring.studycafe.config.interceptor;
+package io.spring.studycafe.config.authorization.interceptor;
 
 import io.spring.studycafe.authorization.AuthorizationManager;
 import io.spring.studycafe.authorization.AuthorizationMetaData;
@@ -6,6 +6,8 @@ import io.spring.studycafe.authorization.AuthorizationPayload;
 import io.spring.studycafe.authorization.jwt.exception.AuthorizationException;
 import io.spring.studycafe.config.handler.exception.AuthorizationExceptionCode;
 import io.spring.studycafe.config.handler.exception.TokenAuthorizationException;
+import io.spring.studycafe.config.authorization.AuthorizationHolder;
+import io.spring.studycafe.config.authorization.AuthorizationInfo;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpStatus;
@@ -14,9 +16,11 @@ import org.springframework.web.servlet.HandlerInterceptor;
 public class AuthorizationHandlerInterceptor implements HandlerInterceptor {
 
     private final AuthorizationManager authorizationManager;
+    private final AuthorizationHolder authorizationHolder;
 
-    public AuthorizationHandlerInterceptor(AuthorizationManager authorizationManager) {
+    public AuthorizationHandlerInterceptor(AuthorizationManager authorizationManager, AuthorizationHolder authorizationHolder) {
         this.authorizationManager = authorizationManager;
+        this.authorizationHolder = authorizationHolder;
     }
 
     @Override
@@ -30,7 +34,7 @@ public class AuthorizationHandlerInterceptor implements HandlerInterceptor {
 
         try {
             AuthorizationPayload payload = authorizationManager.validateAccessToken(accessToken);
-            setAuthentication(request, payload);
+            setAuthentication(payload);
         } catch (AuthorizationException exception) {
             throw new TokenAuthorizationException(exception.getMessage(), exception.getCode(), HttpStatus.UNAUTHORIZED.value());
         }
@@ -38,7 +42,11 @@ public class AuthorizationHandlerInterceptor implements HandlerInterceptor {
         return HandlerInterceptor.super.preHandle(request, response, handler);
     }
 
-    private void setAuthentication(HttpServletRequest request, AuthorizationPayload payload) {
-        request.setAttribute(AuthorizationMetaData.AUTHENTICATION.name(), payload);
+    private void setAuthentication(AuthorizationPayload payload) {
+        authorizationHolder.setMemberInfo(new AuthorizationInfo(
+            payload.id(),
+            payload.email(),
+            payload.name()
+        ));
     }
 }

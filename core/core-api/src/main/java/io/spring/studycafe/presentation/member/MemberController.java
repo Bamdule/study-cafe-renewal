@@ -1,8 +1,8 @@
 package io.spring.studycafe.presentation.member;
 
 import io.spring.studycafe.applcation.member.MemberService;
-import io.spring.studycafe.config.resolver.MemberAuthentication;
-import io.spring.studycafe.config.resolver.MemberInfo;
+import io.spring.studycafe.config.authorization.Authorization;
+import io.spring.studycafe.config.authorization.AuthorizationInfo;
 import io.spring.studycafe.domain.member.Member;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,9 +20,9 @@ public class MemberController {
     }
 
     @GetMapping
-    public ResponseEntity<MemberResponse> findMember(@MemberAuthentication MemberInfo memberInfo) {
+    public ResponseEntity<MemberResponse> findMember(@Authorization AuthorizationInfo authorizationInfo) {
 
-        Member member = memberService.getById(memberInfo.id());
+        Member member = memberService.getById(authorizationInfo.id());
 
         return ResponseEntity.ok(new MemberResponse(
             member.getId(),
