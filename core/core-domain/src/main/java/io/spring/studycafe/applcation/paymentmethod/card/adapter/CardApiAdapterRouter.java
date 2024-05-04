@@ -11,22 +11,22 @@ import java.util.stream.Collectors;
 import static io.spring.studycafe.domain.common.ExceptionCode.CARD_REGISTER_ADAPTER_NOT_FOUND;
 
 @Component
-public class CardRegisterAdapterRouter {
+public class CardApiAdapterRouter {
 
-    private final Map<CardPaymentAgency, CardRegisterAdapter> router;
+    private final Map<CardPaymentAgency, CardApiAdapter> router;
 
-    public CardRegisterAdapterRouter(List<CardRegisterAdapter> cardRegisterAdapters) {
+    public CardApiAdapterRouter(List<CardApiAdapter> cardApiAdapters) {
 
-        this.router = cardRegisterAdapters
+        this.router = cardApiAdapters
             .stream()
-            .collect(Collectors.toMap(CardRegisterAdapter::getCardPaymentAgency, Function.identity()));
+            .collect(Collectors.toMap(CardApiAdapter::getCardPaymentAgency, Function.identity()));
     }
 
-    public CardRegisterAdapter route(CardPaymentAgency cardPaymentAgency) {
-        CardRegisterAdapter adapter = router.get(cardPaymentAgency);
+    public CardApiAdapter route(CardPaymentAgency cardPaymentAgency) {
+        CardApiAdapter adapter = router.get(cardPaymentAgency);
 
         if (adapter == null) {
-            throw new CardRegisterAdapterNotFoundException(
+            throw new CardApiAdapterNotFoundException(
                 CARD_REGISTER_ADAPTER_NOT_FOUND,
                 String.format("%s 카드 등록 업체를 찾을 수 없습니다.", cardPaymentAgency.name())
             );

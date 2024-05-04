@@ -1,6 +1,7 @@
 package io.spring.studycafe.domain.paymentmethod.card;
 
 import io.spring.studycafe.domain.common.ExceptionCode;
+import io.spring.studycafe.domain.paymentmethod.card.exception.CardRegistrationUnavailableException;
 import org.springframework.stereotype.Service;
 
 @Service

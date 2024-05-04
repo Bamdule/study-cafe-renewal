@@ -9,4 +9,6 @@ public interface CardPaymentMethodRepository {
     CardPaymentMethod save(CardPaymentMethod cardPaymentMethod);
 
     List<CardPaymentMethod> findAllByMemberId(Long memberId);
+
+    void delete(CardPaymentMethod cardPaymentMethod);
 }

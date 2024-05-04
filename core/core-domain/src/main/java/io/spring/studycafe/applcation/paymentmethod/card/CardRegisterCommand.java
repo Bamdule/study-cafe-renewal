@@ -2,7 +2,7 @@ package io.spring.studycafe.applcation.paymentmethod.card;
 
 import io.spring.studycafe.domain.paymentmethod.card.CardPaymentAgency;
 
-public record CardRegistrationCommand(
+public record CardRegisterCommand(
     Long memberId,
     String cardNumber,
     String expirationYear,

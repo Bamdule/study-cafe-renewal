@@ -1,6 +1,6 @@
 package io.spring.studycafe.applcation.paymentmethod.card;
 
-import io.spring.studycafe.applcation.paymentmethod.card.adapter.CardRegisterAdapterRouter;
+import io.spring.studycafe.applcation.paymentmethod.card.adapter.CardApiAdapterRouter;
 import io.spring.studycafe.applcation.paymentmethod.card.adapter.CardRegistrationRequest;
 import io.spring.studycafe.applcation.paymentmethod.card.adapter.CardRegistrationResponse;
 import io.spring.studycafe.domain.paymentmethod.card.CardPaymentMethod;
@@ -11,25 +11,25 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-public class CardRegistrationService {
+public class CardRegisterService {
     private final CardPaymentMethodRepository cardPaymentMethodRepository;
     private final CardPaymentMethodDomainService cardPaymentMethodDomainService;
-    private final CardRegisterAdapterRouter cardRegisterAdapterRouter;
+    private final CardApiAdapterRouter cardApiAdapterRouter;
 
-    public CardRegistrationService(CardPaymentMethodRepository cardPaymentMethodRepository, CardPaymentMethodDomainService cardPaymentMethodDomainService, CardRegisterAdapterRouter cardRegisterAdapterRouter) {
+    public CardRegisterService(CardPaymentMethodRepository cardPaymentMethodRepository, CardPaymentMethodDomainService cardPaymentMethodDomainService, CardApiAdapterRouter cardApiAdapterRouter) {
         this.cardPaymentMethodRepository = cardPaymentMethodRepository;
         this.cardPaymentMethodDomainService = cardPaymentMethodDomainService;
-        this.cardRegisterAdapterRouter = cardRegisterAdapterRouter;
+        this.cardApiAdapterRouter = cardApiAdapterRouter;
     }
 
     @Transactional
-    public CardRegistrationResult register(CardRegistrationCommand command) {
+    public CardRegisterResult register(CardRegisterCommand command) {
 
         // 카드 등록 정책 체크
         checkCardRegistrationPolicy(command);
 
         try {
-            CardRegistrationResponse response = cardRegisterAdapterRouter
+            CardRegistrationResponse response = cardApiAdapterRouter
                 .route(command.cardPaymentAgency())
                 .register(
                     new CardRegistrationRequest(
@@ -37,8 +37,7 @@ public class CardRegistrationService {
                         command.expirationYear(),
                         command.expirationMonth(),
                         command.cardPassword(),
-                        command.personalId(),
-                        command.cardPaymentAgency()
+                        command.personalId()
                     ));
 
             if (response.success()) {
@@ -51,13 +50,13 @@ public class CardRegistrationService {
             }
 
             //TODO: 카드 등록 히스토리 생성
-            return new CardRegistrationResult(response.message(), response.success());
+            return new CardRegisterResult(response.message(), response.success());
         } catch (Exception e) {
             throw new RuntimeException();
         }
     }
 
-    private void checkCardRegistrationPolicy(CardRegistrationCommand command) {
+    private void checkCardRegistrationPolicy(CardRegisterCommand command) {
         cardPaymentMethodDomainService.checkRegistrationPolicy(new CardPaymentMethodRegistrationPolicyCheckCommand(command.memberId()));
     }
 }

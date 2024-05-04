@@ -1,6 +1,6 @@
 package io.spring.studycafe.applcation.paymentmethod.card;
 
-public record CardRegistrationResult(
+public record CardRegisterResult(
     String message,
     boolean success
 ) {

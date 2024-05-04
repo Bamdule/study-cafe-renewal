@@ -32,4 +32,9 @@ public class CardPaymentMethodCoreRepository implements CardPaymentMethodReposit
         return cardPaymentMethodJpaRepository.findAllByMemberId(memberId)
             .stream().map(CardPaymentMethodEntity::toModel).toList();
     }
+
+    @Override
+    public void delete(CardPaymentMethod cardPaymentMethod) {
+        cardPaymentMethodJpaRepository.deleteById(cardPaymentMethod.getId());
+    }
 }

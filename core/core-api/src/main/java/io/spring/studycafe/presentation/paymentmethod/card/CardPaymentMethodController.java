@@ -1,9 +1,6 @@
 package io.spring.studycafe.presentation.paymentmethod.card;
 
-import io.spring.studycafe.applcation.paymentmethod.card.CardRegistrationCommand;
-import io.spring.studycafe.applcation.paymentmethod.card.CardRegistrationResult;
-import io.spring.studycafe.applcation.paymentmethod.card.CardRegistrationService;
-import io.spring.studycafe.applcation.paymentmethod.card.CardSearchService;
+import io.spring.studycafe.applcation.paymentmethod.card.*;
 import io.spring.studycafe.config.authorization.Authorization;
 import io.spring.studycafe.config.authorization.AuthorizationInfo;
 import io.spring.studycafe.domain.paymentmethod.card.CardPaymentMethod;
@@ -17,12 +14,14 @@ import java.util.List;
 @RestController
 public class CardPaymentMethodController {
 
-    private final CardRegistrationService cardRegistrationService;
+    private final CardRegisterService cardRegisterService;
     private final CardSearchService cardSearchService;
+    private final CardDeleteService cardDeleteService;
 
-    public CardPaymentMethodController(CardRegistrationService cardRegistrationService, CardSearchService cardSearchService) {
-        this.cardRegistrationService = cardRegistrationService;
+    public CardPaymentMethodController(CardRegisterService cardRegisterService, CardSearchService cardSearchService, CardDeleteService cardDeleteService) {
+        this.cardRegisterService = cardRegisterService;
         this.cardSearchService = cardSearchService;
+        this.cardDeleteService = cardDeleteService;
     }
 
     @PostMapping
@@ -30,8 +29,8 @@ public class CardPaymentMethodController {
         @RequestBody @Valid CardPaymentMethodRegistrationRequest request,
         @Authorization AuthorizationInfo authorizationInfo
     ) {
-        CardRegistrationResult result = cardRegistrationService.register(
-            new CardRegistrationCommand(
+        CardRegisterResult result = cardRegisterService.register(
+            new CardRegisterCommand(
                 authorizationInfo.id(),
                 request.cardNumber(),
                 request.expirationYear(),
@@ -44,8 +43,17 @@ public class CardPaymentMethodController {
         return ResponseEntity.ok(new CardPaymentMethodRegistrationResponse(result.message(), result.success()));
     }
 
+
     @GetMapping
     ResponseEntity<List<CardPaymentMethod>> findAllCards(@Authorization AuthorizationInfo authorizationInfo) {
         return ResponseEntity.ok(cardSearchService.findAllByMemberId(authorizationInfo.id()));
     }
+
+    @DeleteMapping("/{id}")
+    ResponseEntity<CardPaymentMethodRegistrationResponse> deletePaymentMethod(@PathVariable(value = "id") Long id) {
+        CardDeleteResult result = cardDeleteService.delete(new CardDeleteCommand(id));
+
+        return ResponseEntity.ok(new CardPaymentMethodRegistrationResponse(result.message(), result.success()));
+    }
+
 }
