@@ -4,6 +4,7 @@ import io.spring.studycafe.domain.paymentmethod.card.CardPaymentMethod;
 import io.spring.studycafe.domain.paymentmethod.card.CardPaymentMethodRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -29,5 +30,11 @@ public class CardPaymentMethodCoreRepository implements CardPaymentMethodReposit
     @Override
     public CardPaymentMethod save(CardPaymentMethod cardPaymentMethod) {
         return cardPaymentMethodJpaRepository.save(CardPaymentMethodEntity.of(cardPaymentMethod)).toModel();
+    }
+
+    @Override
+    public List<CardPaymentMethod> findAllByMemberId(Long memberId) {
+        return cardPaymentMethodJpaRepository.findAllByMemberId(memberId)
+            .stream().map(CardPaymentMethodEntity::toModel).toList();
     }
 }

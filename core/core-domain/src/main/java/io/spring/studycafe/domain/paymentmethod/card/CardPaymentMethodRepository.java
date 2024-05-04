@@ -1,5 +1,6 @@
 package io.spring.studycafe.domain.paymentmethod.card;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface CardPaymentMethodRepository {
@@ -8,4 +9,6 @@ public interface CardPaymentMethodRepository {
     Optional<CardPaymentMethod> findByMemberId(Long memberId);
 
     CardPaymentMethod save(CardPaymentMethod cardPaymentMethod);
+
+    List<CardPaymentMethod> findAllByMemberId(Long memberId);
 }

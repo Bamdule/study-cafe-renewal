@@ -1,7 +1,6 @@
 package io.spring.studycafe.domain.common.exception;
 
 import io.spring.studycafe.domain.common.ExceptionCode;
-import lombok.Getter;
 
 public class DomainException extends BaseException {
 
@@ -11,5 +10,9 @@ public class DomainException extends BaseException {
 
     public DomainException(ExceptionCode exceptionCode) {
         this(exceptionCode.getMessage(), exceptionCode.name(), exceptionCode.getHttpStatus().value());
+    }
+
+    public DomainException(ExceptionCode exceptionCode, String message) {
+        this(message, exceptionCode.name(), exceptionCode.getHttpStatus().value());
     }
 }

@@ -3,6 +3,7 @@ package io.spring.studycafe.paymentmethod.card.nicepay;
 import io.spring.studycafe.applcation.paymentmethod.card.adapter.CardRegisterAdapter;
 import io.spring.studycafe.applcation.paymentmethod.card.adapter.CardRegistrationRequest;
 import io.spring.studycafe.applcation.paymentmethod.card.adapter.CardRegistrationResponse;
+import io.spring.studycafe.domain.paymentmethod.card.CardPaymentAgency;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -23,5 +24,10 @@ public class FakeNicepayCardRegister implements CardRegisterAdapter {
     @Override
     public CardRegistrationResponse register(CardRegistrationRequest request) {
         return new CardRegistrationResponse("ABCDEFG", "카드 등록 성공", true);
+    }
+
+    @Override
+    public CardPaymentAgency getCardPaymentAgency() {
+        return CardPaymentAgency.NICEPAY;
     }
 }
