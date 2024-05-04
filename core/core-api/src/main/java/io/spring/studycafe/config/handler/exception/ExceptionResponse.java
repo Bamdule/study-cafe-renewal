@@ -1,6 +1,9 @@
 package io.spring.studycafe.config.handler.exception;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 import java.time.LocalDateTime;
+import java.util.List;
 
 public class ExceptionResponse {
 
@@ -8,10 +11,19 @@ public class ExceptionResponse {
     private final String message;
     private final String code;
 
-    public ExceptionResponse(String message, String code) {
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
+    private final List<InvalidValueInfo> invalidValueInfos;
+
+
+    public ExceptionResponse(String message, String code, List<InvalidValueInfo> invalidValueInfos) {
         this.timestamp = LocalDateTime.now();
         this.message = message;
         this.code = code;
+        this.invalidValueInfos = invalidValueInfos;
+    }
+
+    public ExceptionResponse(String message, String code) {
+        this(message, code, null);
     }
 
     public LocalDateTime getTimestamp() {
@@ -24,5 +36,16 @@ public class ExceptionResponse {
 
     public String getCode() {
         return code;
+    }
+
+    public List<InvalidValueInfo> getInvalidValueInfos() {
+        return invalidValueInfos;
+    }
+
+    public record InvalidValueInfo(
+        String field,
+        Object value,
+        String message
+    ) {
     }
 }

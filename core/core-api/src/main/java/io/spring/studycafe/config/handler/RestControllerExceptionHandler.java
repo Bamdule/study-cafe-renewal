@@ -5,12 +5,36 @@ import io.spring.studycafe.config.handler.exception.TokenAuthorizationException;
 import io.spring.studycafe.domain.common.exception.DomainException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.util.List;
+
 @RestControllerAdvice
 public class RestControllerExceptionHandler {
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ExceptionResponse> handleMethodArgumentNotValidException(MethodArgumentNotValidException exception) {
+
+        List<ExceptionResponse.InvalidValueInfo> invalidValueInfos = exception.getBindingResult().getFieldErrors()
+            .stream()
+            .map(error -> new ExceptionResponse.InvalidValueInfo(
+                error.getField(),
+                error.getRejectedValue(),
+                error.getDefaultMessage()
+            ))
+            .toList();
+
+        ExceptionResponse response = new ExceptionResponse(
+            "잘못된 파라미터를 입력했습니다.",
+            "PARAMETERS_INVALID",
+            invalidValueInfos
+        );
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+    }
 
     @ExceptionHandler(DomainException.class)
     public ResponseEntity<ExceptionResponse> handleDomainException(DomainException exception) {
