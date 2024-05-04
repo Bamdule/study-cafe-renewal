@@ -23,11 +23,6 @@ public class CardPaymentMethodCoreRepository implements CardPaymentMethodReposit
     }
 
     @Override
-    public Optional<CardPaymentMethod> findByMemberId(Long memberId) {
-        return cardPaymentMethodJpaRepository.findByMemberId(memberId).map(CardPaymentMethodEntity::toModel);
-    }
-
-    @Override
     public CardPaymentMethod save(CardPaymentMethod cardPaymentMethod) {
         return cardPaymentMethodJpaRepository.save(CardPaymentMethodEntity.of(cardPaymentMethod)).toModel();
     }

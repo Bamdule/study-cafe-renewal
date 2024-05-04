@@ -7,6 +7,8 @@ import io.spring.studycafe.domain.paymentmethod.card.CardPaymentAgency;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
+import java.util.UUID;
+
 @Slf4j
 @Component
 public class FakeNicepayCardRegister implements CardRegisterAdapter {
@@ -23,7 +25,9 @@ public class FakeNicepayCardRegister implements CardRegisterAdapter {
 
     @Override
     public CardRegistrationResponse register(CardRegistrationRequest request) {
-        return new CardRegistrationResponse("ABCDEFG", "카드 등록 성공", true);
+
+
+        return new CardRegistrationResponse(UUID.randomUUID().toString(), "카드 등록 성공", true);
     }
 
     @Override

@@ -4,6 +4,9 @@ import io.spring.studycafe.domain.paymentmethod.card.CardPaymentMethod;
 import io.spring.studycafe.domain.paymentmethod.card.CardPaymentMethodRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.Optional;
+
 @Service
 public class CardSearchService {
     private final CardPaymentMethodRepository cardPaymentMethodRepository;
@@ -12,8 +15,11 @@ public class CardSearchService {
         this.cardPaymentMethodRepository = cardPaymentMethodRepository;
     }
 
-    public CardPaymentMethod search(Long memberId) {
-        return cardPaymentMethodRepository.findByMemberId(memberId)
-            .orElseThrow(RuntimeException::new);
+    public List<CardPaymentMethod> findAllByMemberId(Long memberId) {
+        return cardPaymentMethodRepository.findAllByMemberId(memberId);
+    }
+
+    public Optional<CardPaymentMethod> findById(Long id) {
+        return cardPaymentMethodRepository.findById(id);
     }
 }

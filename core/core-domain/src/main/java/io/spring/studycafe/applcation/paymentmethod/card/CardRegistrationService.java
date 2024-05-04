@@ -42,7 +42,12 @@ public class CardRegistrationService {
                     ));
 
             if (response.success()) {
-                cardPaymentMethodRepository.save(new CardPaymentMethod(command.memberId(), response.cardSecretKey(), command.cardPaymentAgency()));
+                cardPaymentMethodRepository.save(new CardPaymentMethod(
+                    command.memberId(),
+                    response.cardSecretKey(),
+                    command.cardNumber().substring(command.cardNumber().length() - 4),
+                    command.cardPaymentAgency()
+                ));
             }
 
             //TODO: 카드 등록 히스토리 생성

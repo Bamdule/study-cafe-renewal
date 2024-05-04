@@ -1,5 +1,6 @@
 package io.spring.studycafe.applcation.paymentmethod.card.adapter;
 
+import io.spring.studycafe.applcation.member.oauth2.OAuth2Client;
 import io.spring.studycafe.domain.paymentmethod.card.CardPaymentAgency;
 import org.springframework.stereotype.Component;
 
@@ -16,6 +17,7 @@ public class CardRegisterAdapterRouter {
     private final Map<CardPaymentAgency, CardRegisterAdapter> router;
 
     public CardRegisterAdapterRouter(List<CardRegisterAdapter> cardRegisterAdapters) {
+
         this.router = cardRegisterAdapters
             .stream()
             .collect(Collectors.toMap(CardRegisterAdapter::getCardPaymentAgency, Function.identity()));

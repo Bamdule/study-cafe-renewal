@@ -6,8 +6,6 @@ import java.util.Optional;
 public interface CardPaymentMethodRepository {
     Optional<CardPaymentMethod> findById(Long id);
 
-    Optional<CardPaymentMethod> findByMemberId(Long memberId);
-
     CardPaymentMethod save(CardPaymentMethod cardPaymentMethod);
 
     List<CardPaymentMethod> findAllByMemberId(Long memberId);

@@ -17,12 +17,12 @@ public record NaverMemberResponse(
     public OAuth2MemberResponse to() {
 
         return new OAuth2MemberResponse(
-            resultCode,
-            message,
             member.id(),
-            member.nickname(),
             member.email(),
             member.name(),
+            member.nickname(),
+            message,
+            resultCode,
             "",
             "",
             isSuccess()

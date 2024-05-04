@@ -14,20 +14,24 @@ public class CardPaymentMethodEntity {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "member_id", nullable = false, unique = true)
+    @Column(name = "member_id", nullable = false)
     private Long memberId;
 
     @Column(name = "card_secret_key", nullable = false)
     private String cardSecretKey;
 
+    @Column(name = "last_digits", nullable = false)
+    private String lastDigits;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "card_payment_agency", nullable = false)
     private CardPaymentAgency cardPaymentAgency;
 
-    public CardPaymentMethodEntity(Long id, Long memberId, String cardSecretKey, CardPaymentAgency cardPaymentAgency) {
+    public CardPaymentMethodEntity(Long id, Long memberId, String cardSecretKey, String lastDigits, CardPaymentAgency cardPaymentAgency) {
         this.id = id;
         this.memberId = memberId;
         this.cardSecretKey = cardSecretKey;
+        this.lastDigits = lastDigits;
         this.cardPaymentAgency = cardPaymentAgency;
     }
 
@@ -39,6 +43,7 @@ public class CardPaymentMethodEntity {
             id,
             memberId,
             cardSecretKey,
+            lastDigits,
             cardPaymentAgency
         );
     }
@@ -48,6 +53,7 @@ public class CardPaymentMethodEntity {
             cardPaymentMethod.getId(),
             cardPaymentMethod.getMemberId(),
             cardPaymentMethod.getCardSecretKey(),
+            cardPaymentMethod.getLastDigits(),
             cardPaymentMethod.getCardPaymentAgency()
         );
     }
