@@ -6,11 +6,11 @@ import java.util.Objects;
 
 @Getter
 public class CardPaymentMethod {
-    private Long id;
-    private Long memberId;
-    private String cardSecretKey;
-    private CardPaymentAgency cardPaymentAgency;
-    private String lastDigits;
+    private final Long id;
+    private final Long memberId;
+    private final String cardSecretKey;
+    private final CardPaymentAgency cardPaymentAgency;
+    private final String lastDigits;
 
 
     public CardPaymentMethod(Long id, Long memberId, String cardSecretKey, String lastDigits, CardPaymentAgency cardPaymentAgency) {

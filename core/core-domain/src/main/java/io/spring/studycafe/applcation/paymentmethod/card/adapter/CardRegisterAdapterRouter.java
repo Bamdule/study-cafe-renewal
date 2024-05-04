@@ -1,6 +1,5 @@
 package io.spring.studycafe.applcation.paymentmethod.card.adapter;
 
-import io.spring.studycafe.applcation.member.oauth2.OAuth2Client;
 import io.spring.studycafe.domain.paymentmethod.card.CardPaymentAgency;
 import org.springframework.stereotype.Component;
 
