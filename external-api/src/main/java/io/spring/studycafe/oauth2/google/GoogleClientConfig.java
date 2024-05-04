@@ -5,6 +5,7 @@ import io.spring.studycafe.oauth2.google.authorization.GoogleAuthorizationApi;
 import io.spring.studycafe.oauth2.google.resource.GoogleResourceApi;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import retrofit2.Retrofit;
@@ -15,6 +16,11 @@ import java.util.concurrent.TimeUnit;
 @Configuration
 public class GoogleClientConfig {
 
+    @Value("${oauth2.google.authorization-api.domain}")
+    private String authorizationApiDomain;
+
+    @Value("${oauth2.google.resource-api.domain}")
+    private String resourceApiDomain;
     private final ObjectMapper objectMapper;
     private static final HttpLoggingInterceptor loggingInterceptor
         = new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY);
@@ -34,7 +40,7 @@ public class GoogleClientConfig {
             .build();
 
         return new Retrofit.Builder()
-            .baseUrl("https://oauth2.googleapis.com")
+            .baseUrl(authorizationApiDomain)
             .addConverterFactory(JacksonConverterFactory.create(objectMapper))
             .client(client)
             .build()
@@ -52,7 +58,7 @@ public class GoogleClientConfig {
             .build();
 
         return new Retrofit.Builder()
-            .baseUrl("https://www.googleapis.com")
+            .baseUrl(resourceApiDomain)
             .addConverterFactory(JacksonConverterFactory.create(objectMapper))
             .client(client)
             .build()

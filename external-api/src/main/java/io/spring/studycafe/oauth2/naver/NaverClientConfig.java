@@ -5,6 +5,7 @@ import io.spring.studycafe.oauth2.naver.authorization.NaverAuthorizationApi;
 import io.spring.studycafe.oauth2.naver.resource.NaverResourceApi;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import retrofit2.Retrofit;
@@ -15,6 +16,11 @@ import java.util.concurrent.TimeUnit;
 @Configuration
 public class NaverClientConfig {
 
+    @Value("${oauth2.naver.authorization-api.domain}")
+    private String authorizationApiDomain;
+
+    @Value("${oauth2.naver.resource-api.domain}")
+    private String resourceApiDomain;
     private final ObjectMapper objectMapper;
     private static final HttpLoggingInterceptor loggingInterceptor
         = new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY);
@@ -34,7 +40,7 @@ public class NaverClientConfig {
             .build();
 
         return new Retrofit.Builder()
-            .baseUrl("https://nid.naver.com")
+            .baseUrl(authorizationApiDomain)
             .addConverterFactory(JacksonConverterFactory.create(objectMapper))
             .client(client)
             .build()
@@ -52,15 +58,10 @@ public class NaverClientConfig {
             .build();
 
         return new Retrofit.Builder()
-            .baseUrl("https://openapi.naver.com")
+            .baseUrl(resourceApiDomain)
             .addConverterFactory(JacksonConverterFactory.create(objectMapper))
             .client(client)
             .build()
             .create(NaverResourceApi.class);
     }
-
-//    @Bean(name = "naverOpenApiRestClient")
-//    public RestClient naverOpenApiRestClient() {
-//        return RestClient.create("https://openapi.naver.com");
-//    }
 }
