@@ -12,6 +12,7 @@ public enum ExceptionCode {
 
     CARD_REGISTRATION_COUNT_EXCEEDED("등록 가능한 개수를 초과했습니다.", HttpStatus.BAD_REQUEST),
     CARD_REGISTER_ADAPTER_NOT_FOUND("카드 등록 어댑터를 찾을 수 없습니다.", HttpStatus.BAD_REQUEST),
+    CARD_DELETE_FAILURE("카드 삭제를 실패했습니다.", HttpStatus.BAD_REQUEST),
     ;
 
     private final String message;

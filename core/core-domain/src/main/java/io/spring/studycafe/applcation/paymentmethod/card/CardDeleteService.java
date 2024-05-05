@@ -6,10 +6,13 @@ import io.spring.studycafe.applcation.paymentmethod.card.adapter.CardDeleteRespo
 import io.spring.studycafe.domain.common.ExceptionCode;
 import io.spring.studycafe.domain.paymentmethod.card.CardPaymentMethod;
 import io.spring.studycafe.domain.paymentmethod.card.CardPaymentMethodRepository;
+import io.spring.studycafe.domain.paymentmethod.card.exception.CardDeleteFailureException;
 import io.spring.studycafe.domain.paymentmethod.card.exception.CardPaymentMethodNotFoundException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+@Slf4j
 @Service
 public class CardDeleteService {
     private final CardPaymentMethodRepository cardPaymentMethodRepository;
@@ -31,6 +34,11 @@ public class CardDeleteService {
 
         CardDeleteResponse response = cardApiAdapterRouter.route(paymentMethod.getCardPaymentAgency())
             .delete(new CardDeleteRequest(paymentMethod.getCardSecretKey()));
+
+        if (!response.success()) {
+            log.error("{}", response.message());
+            throw new CardDeleteFailureException(ExceptionCode.CARD_DELETE_FAILURE);
+        }
 
         return new CardDeleteResult(response.message(), response.success());
 
