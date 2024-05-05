@@ -1,6 +1,7 @@
 package io.spring.studycafe.oauth2.naver;
 
 import io.spring.studycafe.applcation.member.oauth2.*;
+import io.spring.studycafe.applcation.member.oauth2.adapter.*;
 import io.spring.studycafe.oauth2.naver.authorization.NaverAccessTokenResponse;
 import io.spring.studycafe.oauth2.naver.authorization.NaverAuthorizationApi;
 import io.spring.studycafe.oauth2.naver.resource.NaverMemberResponse;

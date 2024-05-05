@@ -1,7 +1,7 @@
 package io.spring.studycafe.oauth2.naver.resource;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import io.spring.studycafe.applcation.member.oauth2.OAuth2MemberResponse;
+import io.spring.studycafe.applcation.member.oauth2.adapter.OAuth2MemberResponse;
 
 public record NaverMemberResponse(
     @JsonProperty("resultcode") String resultCode,

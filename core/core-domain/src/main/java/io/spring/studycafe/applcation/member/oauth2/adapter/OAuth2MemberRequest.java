@@ -1,4 +1,6 @@
-package io.spring.studycafe.applcation.member.oauth2;
+package io.spring.studycafe.applcation.member.oauth2.adapter;
+
+import io.spring.studycafe.applcation.member.oauth2.OAuth2Platform;
 
 public record OAuth2MemberRequest(String accessToken, OAuth2Platform platform) {
 

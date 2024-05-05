@@ -1,4 +1,4 @@
-package io.spring.studycafe.applcation.member.oauth2;
+package io.spring.studycafe.applcation.member.oauth2.adapter;
 
 public record OAuth2MemberResponse(
     String id,

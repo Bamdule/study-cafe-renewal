@@ -1,5 +1,6 @@
-package io.spring.studycafe.applcation.member.oauth2;
+package io.spring.studycafe.applcation.member.oauth2.adapter;
 
+import io.spring.studycafe.applcation.member.oauth2.OAuth2Platform;
 import org.springframework.stereotype.Component;
 
 import java.util.List;

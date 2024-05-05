@@ -1,4 +1,6 @@
-package io.spring.studycafe.applcation.member.oauth2;
+package io.spring.studycafe.applcation.member.oauth2.adapter;
+
+import io.spring.studycafe.applcation.member.oauth2.OAuth2Platform;
 
 public interface OAuth2Client {
 

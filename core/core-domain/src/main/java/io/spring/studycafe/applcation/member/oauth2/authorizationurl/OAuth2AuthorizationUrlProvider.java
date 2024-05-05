@@ -1,4 +1,4 @@
-package io.spring.studycafe.applcation.member.oauth2.authorization;
+package io.spring.studycafe.applcation.member.oauth2.authorizationurl;
 
 import io.spring.studycafe.applcation.member.oauth2.OAuth2Platform;
 import org.springframework.stereotype.Component;
