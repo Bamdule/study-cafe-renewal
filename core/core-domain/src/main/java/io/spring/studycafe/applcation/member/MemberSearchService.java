@@ -9,11 +9,11 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 
 @Service
-public class MemberService {
+public class MemberSearchService {
 
     private final MemberRepository memberRepository;
 
-    public MemberService(MemberRepository memberRepository) {
+    public MemberSearchService(MemberRepository memberRepository) {
         this.memberRepository = memberRepository;
     }
 
@@ -25,11 +25,5 @@ public class MemberService {
     public Member getById(Long id) {
         return memberRepository.findById(id)
             .orElseThrow(() -> new MemberNotFoundException(ExceptionCode.MEMBER_NOT_FOUND));
-    }
-
-    public Member register(MemberRegistrationCommand command) {
-        Member member = memberRepository.save(command.toEntity());
-        //todo:: 회원가입 알림 전송
-        return member;
     }
 }

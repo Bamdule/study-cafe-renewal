@@ -2,6 +2,8 @@ package io.spring.studycafe.entity.member;
 
 import io.spring.studycafe.domain.member.Member;
 import io.spring.studycafe.domain.member.RegistrationPlatform;
+import io.spring.studycafe.domain.member.cash.MemberCash;
+import io.spring.studycafe.entity.member.cash.MemberCashEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -26,22 +28,30 @@ public class MemberEntity {
     @Column(name = "registration_platform", nullable = false)
     private RegistrationPlatform registrationPlatform;
 
-    public MemberEntity(Long id, String email, String name, RegistrationPlatform registrationPlatform) {
-        this.id = id;
+
+    @OneToOne(mappedBy = "member", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private MemberCashEntity memberCash;
+
+    public MemberEntity(String email, String name, RegistrationPlatform registrationPlatform) {
         this.email = email;
         this.name = name;
         this.registrationPlatform = registrationPlatform;
+        this.memberCash = new MemberCashEntity(null, MemberCash.DEFAULT_CASH, this);
     }
 
-    public MemberEntity(String email, String name, RegistrationPlatform registrationPlatform) {
-        this(null, email, name, registrationPlatform);
+    public static MemberEntity of(Member member) {
+        return new MemberEntity(
+            member.getEmail(),
+            member.getName(),
+            member.getRegistrationPlatform()
+        );
+    }
+
+    public void updateMemberCash(long cash) {
+        memberCash.updateCash(cash);
     }
 
     public Member toModel() {
-        return new Member(id, email, name, registrationPlatform);
-    }
-
-    public static MemberEntity create(Member member) {
-        return new MemberEntity(member.getId(), member.getEmail(), member.getName(), member.getRegistrationPlatform());
+        return new Member(id, email, name, memberCash.toModel(), registrationPlatform);
     }
 }

@@ -8,5 +8,9 @@ public interface MemberRepository {
 
     Optional<Member> findByEmail(String email);
 
+    Optional<Member> findByIdWithPessimisticLocking(Long id);
+
     Member save(Member member);
+
+    Member updateCash(Member member);
 }
