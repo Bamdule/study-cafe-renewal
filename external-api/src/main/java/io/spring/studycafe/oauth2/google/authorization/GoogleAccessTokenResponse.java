@@ -1,7 +1,7 @@
 package io.spring.studycafe.oauth2.google.authorization;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import io.spring.studycafe.applcation.member.oauth2.OAuth2AccessTokenResponse;
+import io.spring.studycafe.applcation.member.oauth2.adapter.OAuth2AccessTokenResponse;
 
 public record GoogleAccessTokenResponse(
     @JsonProperty("access_token") String accessToken,

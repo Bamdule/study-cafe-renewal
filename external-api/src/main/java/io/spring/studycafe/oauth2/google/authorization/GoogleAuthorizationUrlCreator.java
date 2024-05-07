@@ -1,7 +1,7 @@
 package io.spring.studycafe.oauth2.google.authorization;
 
 import io.spring.studycafe.applcation.member.oauth2.OAuth2Platform;
-import io.spring.studycafe.applcation.member.oauth2.authorization.OAuth2AuthorizationUrlCreator;
+import io.spring.studycafe.applcation.member.oauth2.authorizationurl.OAuth2AuthorizationUrlCreator;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 

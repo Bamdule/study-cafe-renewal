@@ -1,6 +1,7 @@
 package io.spring.studycafe.oauth2.google;
 
 import io.spring.studycafe.applcation.member.oauth2.*;
+import io.spring.studycafe.applcation.member.oauth2.adapter.*;
 import io.spring.studycafe.oauth2.google.authorization.GoogleAccessTokenResponse;
 import io.spring.studycafe.oauth2.google.authorization.GoogleAuthorizationApi;
 import io.spring.studycafe.oauth2.google.resource.GoogleMemberResponse;

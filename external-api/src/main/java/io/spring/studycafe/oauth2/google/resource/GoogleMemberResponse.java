@@ -1,6 +1,6 @@
 package io.spring.studycafe.oauth2.google.resource;
 
-import io.spring.studycafe.applcation.member.oauth2.OAuth2MemberResponse;
+import io.spring.studycafe.applcation.member.oauth2.adapter.OAuth2MemberResponse;
 
 public record GoogleMemberResponse(
     String id,
