@@ -8,6 +8,8 @@ public enum ExceptionCode {
     MEMBER_NOT_FOUND("존재하지 않는 회원입니다.", HttpStatus.NOT_FOUND),
     MEMBER_ALREADY_REGISTERED("이미 가입된 회원입니다", HttpStatus.BAD_REQUEST),
 
+    STUDY_CAFE_NOT_FOUND("존재하지 않는 스터디 카페입니다.", HttpStatus.NOT_FOUND),
+
     CARD_PAYMENT_METHOD_NOT_FOUND("존재하지 않는 카드 결제수단 입니다.", HttpStatus.NOT_FOUND),
 
     CARD_REGISTRATION_COUNT_EXCEEDED("등록 가능한 개수를 초과했습니다.", HttpStatus.BAD_REQUEST),

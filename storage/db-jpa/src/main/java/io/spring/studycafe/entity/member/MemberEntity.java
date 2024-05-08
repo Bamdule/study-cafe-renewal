@@ -36,7 +36,7 @@ public class MemberEntity {
         this.email = email;
         this.name = name;
         this.registrationPlatform = registrationPlatform;
-        this.memberCash = new MemberCashEntity(null, MemberCash.DEFAULT_CASH, this);
+        this.memberCash = new MemberCashEntity(MemberCash.DEFAULT_CASH, this);
     }
 
     public static MemberEntity of(Member member) {

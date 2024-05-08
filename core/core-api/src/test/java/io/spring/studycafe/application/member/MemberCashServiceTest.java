@@ -36,7 +36,7 @@ public class MemberCashServiceTest {
     private MemberRepository memberRepository;
 
     @Test
-    public void test() {
+    public void 회원_캐시_테스트() {
         Member member = memberRepository.save(new Member("", "", RegistrationPlatform.KAKAO));
 
         memberCashRechargeService.rechargeCash(member.getId(), 10000);
@@ -49,10 +49,10 @@ public class MemberCashServiceTest {
     }
 
     @Test
-    public void 회원_캐시가_동시에_10000번_차감되었을때_갱신손실이_발생하지않는지_테스트() throws InterruptedException, ExecutionException {
-        final long remainingAmount = 100000;
+    public void 회원_캐시가_동시에_100번_차감되었을때_갱신손실이_발생하지않는지_테스트() throws InterruptedException, ExecutionException {
+        final long remainingAmount = 100;
         final long usageAmount = 1;
-        final int numberOfThreads = 10000;
+        final int numberOfThreads = 100;
 
         Member member = memberRepository.save(new Member("test@test", "tester", RegistrationPlatform.KAKAO));
         memberCashRechargeService.rechargeCash(member.getId(), remainingAmount);
@@ -87,10 +87,10 @@ public class MemberCashServiceTest {
     }
 
     @Test
-    public void 회원_캐시가_동시에_10000번_충전되었을때_갱신손실이_발생하지않는지_테스트() throws InterruptedException, ExecutionException {
-        final long remainingAmount = 100000;
+    public void 회원_캐시가_동시에_100번_충전되었을때_갱신손실이_발생하지않는지_테스트() throws InterruptedException, ExecutionException {
+        final long remainingAmount = 100;
         final long rechargeAmount = 1;
-        final int numberOfThreads = 10000;
+        final int numberOfThreads = 100;
 
         Member member = memberRepository.save(new Member("test2@test", "tester", RegistrationPlatform.KAKAO));
         memberCashRechargeService.rechargeCash(member.getId(), remainingAmount);

@@ -3,19 +3,16 @@ package io.spring.studycafe.domain.member.cash;
 public class MemberCash {
 
     public static final long DEFAULT_CASH = 0;
-
-    private Long id;
     private long cash;
     private Long memberId;
 
-    public MemberCash(Long id, long cash, Long memberId) {
-        this.id = id;
+    public MemberCash(long cash, Long memberId) {
         this.cash = cash;
         this.memberId = memberId;
     }
 
     public MemberCash() {
-        this(null, DEFAULT_CASH, null);
+        this(DEFAULT_CASH, null);
     }
 
     public void useCash(long amount) {
@@ -36,10 +33,6 @@ public class MemberCash {
         }
 
         this.cash += amount;
-    }
-
-    public Long getId() {
-        return id;
     }
 
     public long getCash() {

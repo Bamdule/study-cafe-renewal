@@ -7,21 +7,20 @@ import jakarta.persistence.*;
 @Table(name = "member_cash")
 @Entity
 public class MemberCashEntity {
-
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
+    @Column(name="member_id")
     private Long id;
-
-    @Column(name = "cash", nullable = false)
-    private long cash;
 
     @OneToOne(fetch = FetchType.LAZY)
     @MapsId
     @JoinColumn(name = "member_id")
     private MemberEntity member;
 
-    public MemberCashEntity(Long id, long cash, MemberEntity member) {
-        this.id = id;
+    @Column(name = "cash", nullable = false)
+    private long cash;
+
+
+    public MemberCashEntity(long cash, MemberEntity member) {
         this.member = member;
         this.cash = cash;
     }
@@ -29,9 +28,6 @@ public class MemberCashEntity {
     protected MemberCashEntity() {
     }
 
-    public Long getId() {
-        return id;
-    }
 
     public long getCash() {
         return cash;
@@ -46,6 +42,6 @@ public class MemberCashEntity {
     }
 
     public MemberCash toModel() {
-        return new MemberCash(id, cash, member.getId());
+        return new MemberCash(cash, member.getId());
     }
 }

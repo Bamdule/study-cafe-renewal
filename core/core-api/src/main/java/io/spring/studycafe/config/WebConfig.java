@@ -1,9 +1,9 @@
 package io.spring.studycafe.config;
 
 import io.spring.studycafe.authorization.AuthorizationManager;
+import io.spring.studycafe.config.authorization.AuthorizationHolder;
 import io.spring.studycafe.config.authorization.interceptor.AuthorizationHandlerInterceptor;
 import io.spring.studycafe.config.authorization.resolver.AuthorizationArgumentResolver;
-import io.spring.studycafe.config.authorization.AuthorizationHolder;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
@@ -25,7 +25,7 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(new AuthorizationHandlerInterceptor(authorizationManager, authorizationHolder))
-            .excludePathPatterns("/api/v1/oauth2-member-registration/**", "/favicon.ico", "/error", "/api/v1/redis-test/**");
+            .excludePathPatterns("/api/v1/oauth2-member-registration/**", "/favicon.ico", "/error", "/api/v1/redis-test/**", "/api/v1/authorization/**");
     }
 
     @Override

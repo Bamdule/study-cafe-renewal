@@ -5,6 +5,7 @@ import io.spring.studycafe.config.handler.exception.TokenAuthorizationException;
 import io.spring.studycafe.domain.common.exception.DomainException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -14,6 +15,16 @@ import java.util.List;
 
 @RestControllerAdvice
 public class RestControllerExceptionHandler {
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<ExceptionResponse> handleHttpMessageNotReadableException(HttpMessageNotReadableException exception) {
+        ExceptionResponse response = new ExceptionResponse(
+            "요청 메시지가 잘못 되었습니다.",
+            "HTTP_MESSAGE_NOT_READABLE"
+        );
+
+        return ResponseEntity.status(400).body(response);
+    }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ExceptionResponse> handleMethodArgumentNotValidException(MethodArgumentNotValidException exception) {
