@@ -2,6 +2,7 @@ package io.spring.studycafe.entity.studycafe.customer;
 
 import io.spring.studycafe.domain.common.BaseModel;
 import io.spring.studycafe.domain.studycafe.customer.Customer;
+import io.spring.studycafe.entity.studycafe.customerticket.CustomerTicketEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
 
@@ -21,19 +22,27 @@ public class CustomerEntity extends BaseModel {
     @Column(name = "study_cafe_id", nullable = false)
     private Long studyCafeId;
 
-    public CustomerEntity(Long memberId, Long studyCafeId) {
-        this.memberId = memberId;
-        this.studyCafeId = studyCafeId;
+    @OneToOne(mappedBy = "customer", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private CustomerTicketEntity customerTicket;
+
+    protected CustomerEntity() {
+    }
+
+    public CustomerEntity(Customer customer) {
+        this.memberId = customer.getMemberId();
+        this.studyCafeId = customer.getStudyCafeId();
+        this.customerTicket = new CustomerTicketEntity(this, customer.getCustomerTicket());
     }
 
     public Customer to() {
-        return new Customer(this.id, this.memberId, this.studyCafeId, this.getCreatedAt(), this.getUpdatedAt());
+        return new Customer(this.id, this.memberId, this.studyCafeId, this.customerTicket.to(), this.getCreatedAt(), this.getUpdatedAt());
     }
 
     public static CustomerEntity of(Customer customer) {
-        return new CustomerEntity(
-            customer.getMemberId(),
-            customer.getStudyCafeId()
-        );
+        return new CustomerEntity(customer);
+    }
+
+    public void update(Customer customer) {
+        this.customerTicket.updateTicket(customer.getCustomerTicket());
     }
 }

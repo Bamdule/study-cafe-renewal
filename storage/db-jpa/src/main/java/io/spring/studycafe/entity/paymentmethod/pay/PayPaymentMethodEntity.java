@@ -14,12 +14,12 @@ public class PayPaymentMethodEntity {
     private Long id;
 
     @Column(name = "member_id", nullable = false, unique = true)
-    private String memberId;
+    private Long memberId;
 
     @Column(name = "pay_secret_key", nullable = false)
     private String paySecretKey;
 
-    public PayPaymentMethodEntity(Long id, String memberId, String paySecretKey) {
+    public PayPaymentMethodEntity(Long id, Long memberId, String paySecretKey) {
         this.id = id;
         this.memberId = memberId;
         this.paySecretKey = paySecretKey;

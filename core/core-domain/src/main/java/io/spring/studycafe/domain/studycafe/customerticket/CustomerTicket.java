@@ -2,15 +2,20 @@ package io.spring.studycafe.domain.studycafe.customerticket;
 
 import io.spring.studycafe.domain.common.BaseModel;
 import io.spring.studycafe.domain.common.TimeInfo;
+import io.spring.studycafe.domain.studycafe.ticket.Ticket;
 import io.spring.studycafe.domain.studycafe.ticket.TicketType;
 import lombok.Getter;
 
 import java.time.Duration;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Getter
 public class CustomerTicket extends BaseModel {
-    private Long id;
+
+    public static final TicketType DEFAULT_TICKET_TYPE = TicketType.NONE;
+    public static final TimeInfo DEFAULT_TIME_INFO = new TimeInfo(0, 0, 0);
+    public static final LocalDate DEFAULT_EXPIRATION_DATE = null;
 
     private Long customerId;
 
@@ -18,22 +23,30 @@ public class CustomerTicket extends BaseModel {
 
     private TimeInfo timeInfo;
 
-    private LocalDateTime expirationDate;
+    private LocalDate expirationDate;
 
-    public CustomerTicket(Long customerId, TicketType ticketType, TimeInfo timeInfo, LocalDateTime expirationDate) {
+    public CustomerTicket(Long customerId, TicketType ticketType, TimeInfo timeInfo, LocalDate expirationDate) {
         this.customerId = customerId;
         this.ticketType = ticketType;
         this.timeInfo = timeInfo;
         this.expirationDate = expirationDate;
     }
 
-    public CustomerTicket(Long id, Long customerId, TicketType ticketType, TimeInfo timeInfo, LocalDateTime expirationDate, LocalDateTime createdAt, LocalDateTime updatedAt) {
+    public CustomerTicket(Long customerId, TicketType ticketType, TimeInfo timeInfo, LocalDate expirationDate, LocalDateTime createdAt, LocalDateTime updatedAt) {
         super(createdAt, updatedAt);
-        this.id = id;
         this.customerId = customerId;
         this.ticketType = ticketType;
         this.timeInfo = timeInfo;
         this.expirationDate = expirationDate;
+    }
+
+    public static CustomerTicket initialize() {
+        return new CustomerTicket(
+            null,
+            DEFAULT_TICKET_TYPE,
+            DEFAULT_TIME_INFO,
+            DEFAULT_EXPIRATION_DATE
+        );
     }
 
     public String getRemainingTime() {
@@ -41,6 +54,47 @@ public class CustomerTicket extends BaseModel {
             return timeInfo.toString();
         }
 
-        return Duration.between(LocalDateTime.now(), expirationDate).toDays() + "일";
+        return Duration.between(LocalDate.now(), expirationDate).toDays() + "일";
+    }
+
+
+    public void updateTicket(Ticket ticket) {
+        if (this.ticketType == ticket.getType()) {
+            switch (ticketType) {
+                case TIME -> addTimeInfo(ticket.getTimeInfo());
+                case PERIOD -> addExpirationDate(ticket.getExpirationDays());
+            }
+        } else {
+            this.ticketType = ticket.getType();
+            this.timeInfo = ticket.getTimeInfo();
+            this.expirationDate = LocalDate.now().plusDays(ticket.getExpirationDays());
+        }
+    }
+
+    public boolean isExpired() {
+        if (this.expirationDate == null) {
+            return true;
+        }
+
+        return this.expirationDate.isBefore(LocalDate.now());
+    }
+
+    private void addExpirationDate(int expirationDays) {
+        if (this.isExpired()) {
+            this.expirationDate = LocalDate.now().plusDays(expirationDays);
+
+        } else {
+            this.expirationDate = this.expirationDate.plusDays(expirationDays);
+        }
+    }
+
+    private void addTimeInfo(TimeInfo timeInfo) {
+        this.timeInfo = TimeInfo.add(this.timeInfo, timeInfo);
+    }
+
+    public void deductTime(TimeInfo timeInfo) {
+        if (this.ticketType == TicketType.TIME) {
+            this.timeInfo = TimeInfo.subtract(this.timeInfo, timeInfo);
+        }
     }
 }

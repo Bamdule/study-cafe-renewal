@@ -1,14 +1,20 @@
 package io.spring.studycafe.application.studycafe.customerticket;
 
+import io.spring.studycafe.applcation.payment.PaymentResult;
+import io.spring.studycafe.applcation.paymentmethod.card.CardInfo;
+import io.spring.studycafe.applcation.paymentmethod.card.CardRegisterCommand;
+import io.spring.studycafe.applcation.paymentmethod.card.CardRegisterService;
+import io.spring.studycafe.applcation.studycafe.customerticket.CustomerTicketPurchaseService;
 import io.spring.studycafe.domain.common.TimeInfo;
 import io.spring.studycafe.domain.member.Member;
 import io.spring.studycafe.domain.member.MemberRepository;
 import io.spring.studycafe.domain.member.RegistrationPlatform;
+import io.spring.studycafe.domain.paymentmethod.PaymentMethodType;
+import io.spring.studycafe.domain.paymentmethod.card.CardPaymentAgency;
 import io.spring.studycafe.domain.studycafe.StudyCafe;
 import io.spring.studycafe.domain.studycafe.StudyCafeRepository;
 import io.spring.studycafe.domain.studycafe.customer.Customer;
 import io.spring.studycafe.domain.studycafe.customer.CustomerRepository;
-import io.spring.studycafe.domain.studycafe.customerticket.CustomerTicket;
 import io.spring.studycafe.domain.studycafe.ticket.Ticket;
 import io.spring.studycafe.domain.studycafe.ticket.TicketRepository;
 import io.spring.studycafe.domain.studycafe.ticket.TicketType;
@@ -17,11 +23,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
-import java.time.LocalDateTime;
-
 @ActiveProfiles("test")
 @SpringBootTest
-public class CustomerTicketServiceTest {
+public class CustomerTicketPurchaseServiceTest {
     @Autowired
     private MemberRepository memberRepository;
 
@@ -34,34 +38,27 @@ public class CustomerTicketServiceTest {
     @Autowired
     private TicketRepository ticketRepository;
 
+    @Autowired
+    private CustomerTicketPurchaseService customerTicketPurchaseService;
+    @Autowired
+    private CardRegisterService cardRegisterService;
+
     @Test
-    public void 스터디카페_시간형티켓_차감_테스트() {
-
+    public void 고객_좌석_이용권_구매_테스트() {
         Member member = memberRepository.save(new Member("hi11@test.com", "HI", RegistrationPlatform.KAKAO));
-
         StudyCafe studyCafe = studyCafeRepository.save(createStudyCafe(member));
-
         Customer customer = customerRepository.save(createCustomer(member, studyCafe));
-
-
         Ticket ticket1 = ticketRepository.save(createTicket(studyCafe, "시간형 티켓", TicketType.TIME, 130000L, new TimeInfo(30, 0, 0), 30));
         Ticket ticket2 = ticketRepository.save(createTicket(studyCafe, "기간형 티켓", TicketType.PERIOD, 150000L, null, 30));
+        CardInfo cardInfo = cardRegisterService.register(new CardRegisterCommand(member.getId(), "1234123412341234", "1234", "12", "1234", "123123", CardPaymentAgency.TOSS));
 
-        customer.updateTicket(ticket1);
-        customerRepository.update(customer);
+        PaymentResult result = customerTicketPurchaseService.purchase(studyCafe.getId(), member.getId(), ticket1.getId(), PaymentMethodType.CARD, cardInfo.id());
 
-        CustomerTicket customerTicket = customer.getCustomerTicket();
-
-        System.out.println(customerTicket.getRemainingTime());
-
-        TimeInfo elapsedTimeInfo = TimeInfo.createElapsedTimeInfo(LocalDateTime.now().minusHours(5).minusMinutes(21), LocalDateTime.now());
-
-        customer.deductTime(elapsedTimeInfo);
-
-        customerRepository.update(customer);
+        System.out.println(result);
 
         Customer findCustomer = customerRepository.find(member.getId(), studyCafe.getId()).get();
-        System.out.println(findCustomer.getCustomerTicket().getRemainingTime());
+
+
     }
 
     private static Ticket createTicket(StudyCafe studyCafe, String name, TicketType ticketType, Long price, TimeInfo timeInfo, int expirationDays) {
@@ -80,5 +77,4 @@ public class CustomerTicketServiceTest {
             member.getId()
         );
     }
-
 }

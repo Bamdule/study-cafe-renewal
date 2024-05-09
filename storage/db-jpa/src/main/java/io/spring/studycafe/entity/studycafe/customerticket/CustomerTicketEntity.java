@@ -4,10 +4,11 @@ import io.spring.studycafe.domain.common.TimeInfo;
 import io.spring.studycafe.domain.studycafe.customerticket.CustomerTicket;
 import io.spring.studycafe.domain.studycafe.ticket.TicketType;
 import io.spring.studycafe.entity.common.BaseModelEntity;
+import io.spring.studycafe.entity.studycafe.customer.CustomerEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Getter
 @Table(name = "customer_ticket")
@@ -15,11 +16,8 @@ import java.time.LocalDateTime;
 public class CustomerTicketEntity extends BaseModelEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "customer_id")
     private Long id;
-
-    @Column(name = "customer_id", nullable = false, unique = true)
-    private Long customerId;
 
     @Column(name = "ticket_type", nullable = false)
     @Enumerated(EnumType.STRING)
@@ -28,36 +26,37 @@ public class CustomerTicketEntity extends BaseModelEntity {
     @Embedded
     private TimeInfo timeInfo;
 
-    @Column(name = "expiration_date", nullable = false)
-    private LocalDateTime expirationDate;
+    @Column(name = "expiration_date")
+    private LocalDate expirationDate;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @MapsId
+    @JoinColumn(name = "customerId")
+    private CustomerEntity customer;
 
     protected CustomerTicketEntity() {
     }
 
-    public CustomerTicketEntity(Long customerId, TicketType ticketType, TimeInfo timeInfo, LocalDateTime expirationDate) {
-        this.customerId = customerId;
-        this.ticketType = ticketType;
-        this.timeInfo = timeInfo;
-        this.expirationDate = expirationDate;
+    public CustomerTicketEntity(CustomerEntity customer, CustomerTicket customerTicket) {
+        this.customer = customer;
+        this.ticketType = customerTicket.getTicketType();
+        this.timeInfo = customerTicket.getTimeInfo();
+        this.expirationDate = customerTicket.getExpirationDate();
     }
 
     public void updateTimeInfo(TimeInfo timeInfo) {
         this.timeInfo = timeInfo;
     }
 
-    public static CustomerTicketEntity of(CustomerTicket customerTicket) {
-        return new CustomerTicketEntity(
-            customerTicket.getCustomerId(),
-            customerTicket.getTicketType(),
-            customerTicket.getTimeInfo(),
-            customerTicket.getExpirationDate()
-        );
+    public void updateTicket(CustomerTicket customerTicket) {
+        this.ticketType = customerTicket.getTicketType();
+        this.timeInfo = customerTicket.getTimeInfo();
+        this.expirationDate = customerTicket.getExpirationDate();
     }
 
     public CustomerTicket to() {
         return new CustomerTicket(
-            id,
-            customerId,
+            customer.getId(),
             ticketType,
             timeInfo,
             expirationDate,

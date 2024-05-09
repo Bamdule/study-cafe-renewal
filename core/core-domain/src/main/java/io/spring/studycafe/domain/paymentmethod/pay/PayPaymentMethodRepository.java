@@ -5,7 +5,7 @@ import java.util.Optional;
 public interface PayPaymentMethodRepository {
     Optional<PayPaymentMethod> findById(Long id);
 
-    Optional<PayPaymentMethod> findByMemberId(String memberId);
+    Optional<PayPaymentMethod> findByMemberId(Long memberId);
 
     PayPaymentMethod save(PayPaymentMethod payPaymentMethod);
 

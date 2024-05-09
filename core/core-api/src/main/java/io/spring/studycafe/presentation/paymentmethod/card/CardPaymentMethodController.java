@@ -29,7 +29,7 @@ public class CardPaymentMethodController {
         @RequestBody @Valid CardPaymentMethodRegistrationRequest request,
         @Authorization AuthorizationInfo authorizationInfo
     ) {
-        CardRegisterResult result = cardRegisterService.register(
+        CardInfo result = cardRegisterService.register(
             new CardRegisterCommand(
                 authorizationInfo.id(),
                 request.cardNumber(),

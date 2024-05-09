@@ -28,10 +28,20 @@ public record TimeInfo(long days, long hours, long minutes) {
 
         // 차이가 음수일 경우 처리
         if (diff < 0) {
-            throw new IllegalArgumentException("두 번째 시간이 첫 번째 시간보다 더 큽니다.");
+            return new TimeInfo(0,0,0);
         }
 
         return TimeInfo.createInMinutes(diff);
+    }
+
+    public static TimeInfo add(TimeInfo time1, TimeInfo time2) {
+        if (time1 == null || time2 == null) {
+            throw new IllegalArgumentException("time1와 time2는 필수 값입니다.");
+        }
+
+        long totalMinutes = time1.getTotalMinutes() + time1.getTotalMinutes();
+
+        return TimeInfo.createInMinutes(totalMinutes);
     }
 
     /**

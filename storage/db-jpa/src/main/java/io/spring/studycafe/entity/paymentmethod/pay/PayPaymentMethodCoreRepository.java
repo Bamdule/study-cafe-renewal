@@ -24,7 +24,7 @@ public class PayPaymentMethodCoreRepository implements PayPaymentMethodRepositor
     }
 
     @Override
-    public Optional<PayPaymentMethod> findByMemberId(String memberId) {
+    public Optional<PayPaymentMethod> findByMemberId(Long memberId) {
         return cardPaymentMethodJpaRepository.findByMemberId(memberId).map(PayPaymentMethodEntity::toModel);
     }
 

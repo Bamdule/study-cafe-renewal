@@ -7,4 +7,6 @@ public interface CustomerRepository {
     Optional<Customer> find(Long memberId, Long studyCafeId);
 
     Customer save(Customer customer);
+
+    void update(Customer customer);
 }
