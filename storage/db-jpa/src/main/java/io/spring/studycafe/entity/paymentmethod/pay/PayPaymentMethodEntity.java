@@ -1,27 +1,25 @@
 package io.spring.studycafe.entity.paymentmethod.pay;
 
+import io.spring.studycafe.domain.paymentmethod.PaymentMethodType;
 import io.spring.studycafe.domain.paymentmethod.pay.PayPaymentMethod;
-import jakarta.persistence.*;
+import io.spring.studycafe.entity.paymentmethod.PaymentMethodEntity;
+import jakarta.persistence.Column;
+import jakarta.persistence.DiscriminatorValue;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 import lombok.Getter;
 
 @Getter
+@DiscriminatorValue("PAY")
 @Table(name = "pay_payment_method")
 @Entity
-public class PayPaymentMethodEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    private Long id;
-
-    @Column(name = "member_id", nullable = false, unique = true)
-    private Long memberId;
+public class PayPaymentMethodEntity extends PaymentMethodEntity {
 
     @Column(name = "pay_secret_key", nullable = false)
     private String paySecretKey;
 
     public PayPaymentMethodEntity(Long id, Long memberId, String paySecretKey) {
-        this.id = id;
-        this.memberId = memberId;
+        super(id, memberId);
         this.paySecretKey = paySecretKey;
     }
 
@@ -30,8 +28,8 @@ public class PayPaymentMethodEntity {
 
     public PayPaymentMethod toModel() {
         return new PayPaymentMethod(
-            id,
-            memberId,
+            getId(),
+            getMemberId(),
             paySecretKey
         );
     }

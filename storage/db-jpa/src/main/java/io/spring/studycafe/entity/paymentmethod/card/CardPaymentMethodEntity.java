@@ -2,20 +2,15 @@ package io.spring.studycafe.entity.paymentmethod.card;
 
 import io.spring.studycafe.domain.paymentmethod.card.CardPaymentAgency;
 import io.spring.studycafe.domain.paymentmethod.card.CardPaymentMethod;
+import io.spring.studycafe.entity.paymentmethod.PaymentMethodEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
 
 @Getter
+@DiscriminatorValue("CARD")
 @Table(name = "card_payment_method")
 @Entity
-public class CardPaymentMethodEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    private Long id;
-
-    @Column(name = "member_id", nullable = false)
-    private Long memberId;
+public class CardPaymentMethodEntity extends PaymentMethodEntity {
 
     @Column(name = "card_secret_key", nullable = false)
     private String cardSecretKey;
@@ -28,20 +23,20 @@ public class CardPaymentMethodEntity {
     private CardPaymentAgency cardPaymentAgency;
 
     public CardPaymentMethodEntity(Long id, Long memberId, String cardSecretKey, String lastDigits, CardPaymentAgency cardPaymentAgency) {
-        this.id = id;
-        this.memberId = memberId;
+        super(id, memberId);
         this.cardSecretKey = cardSecretKey;
         this.lastDigits = lastDigits;
         this.cardPaymentAgency = cardPaymentAgency;
     }
 
     protected CardPaymentMethodEntity() {
+        super();
     }
 
     public CardPaymentMethod toModel() {
         return new CardPaymentMethod(
-            id,
-            memberId,
+            getId(),
+            getMemberId(),
             cardSecretKey,
             lastDigits,
             cardPaymentAgency
