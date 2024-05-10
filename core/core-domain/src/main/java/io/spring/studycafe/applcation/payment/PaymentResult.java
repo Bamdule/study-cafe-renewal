@@ -5,6 +5,7 @@ public record PaymentResult(
     String itemName,
     Long itemPrice,
     String message,
+    String resultCode,
     String resultType,
     boolean success
 ) {

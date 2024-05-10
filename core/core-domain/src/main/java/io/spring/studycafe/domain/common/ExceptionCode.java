@@ -8,6 +8,7 @@ public enum ExceptionCode {
     MEMBER_NOT_FOUND("존재하지 않는 회원입니다.", HttpStatus.NOT_FOUND),
     MEMBER_ALREADY_REGISTERED("이미 가입된 회원입니다", HttpStatus.BAD_REQUEST),
     CUSTOMER_NOT_FOUND("존재하지 않는 고객입니다.", HttpStatus.NOT_FOUND),
+    CUSTOMER_ALREADY_REGISTERED("이미 가입한 고객입니다", HttpStatus.BAD_REQUEST),
 
     STUDY_CAFE_NOT_FOUND("존재하지 않는 스터디 카페입니다.", HttpStatus.NOT_FOUND),
     TICKET_NOT_FOUND("존재하지 않는 티켓입니다.", HttpStatus.NOT_FOUND),

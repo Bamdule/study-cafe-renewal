@@ -18,6 +18,16 @@ public class CustomerCoreRepository implements CustomerRepository {
     }
 
     @Override
+    public Optional<Customer> findById(Long customerId) {
+        return customerJpaRepository.findById(customerId).map(CustomerEntity::to);
+    }
+
+    @Override
+    public Optional<Customer> findWithPessimisticLockingById(Long id) {
+        return customerJpaRepository.findWithPessimisticLockingById(id).map(CustomerEntity::to);
+    }
+
+    @Override
     public Optional<Customer> find(Long memberId, Long studyCafeId) {
         return customerJpaRepository.findByMemberIdAndAndStudyCafeId(memberId, studyCafeId)
             .map(CustomerEntity::to);

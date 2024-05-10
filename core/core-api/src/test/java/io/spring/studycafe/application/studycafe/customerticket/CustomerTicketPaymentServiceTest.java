@@ -4,7 +4,8 @@ import io.spring.studycafe.applcation.payment.PaymentResult;
 import io.spring.studycafe.applcation.paymentmethod.card.CardInfo;
 import io.spring.studycafe.applcation.paymentmethod.card.CardRegisterCommand;
 import io.spring.studycafe.applcation.paymentmethod.card.CardRegisterService;
-import io.spring.studycafe.applcation.studycafe.customerticket.CustomerTicketPurchaseService;
+import io.spring.studycafe.applcation.studycafe.customer.customerticket.CustomerTicketPaymentCommand;
+import io.spring.studycafe.applcation.studycafe.customer.customerticket.CustomerTicketPaymentService;
 import io.spring.studycafe.domain.common.TimeInfo;
 import io.spring.studycafe.domain.member.Member;
 import io.spring.studycafe.domain.member.MemberRepository;
@@ -18,14 +19,17 @@ import io.spring.studycafe.domain.studycafe.customer.CustomerRepository;
 import io.spring.studycafe.domain.studycafe.ticket.Ticket;
 import io.spring.studycafe.domain.studycafe.ticket.TicketRepository;
 import io.spring.studycafe.domain.studycafe.ticket.TicketType;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
+import java.time.LocalDate;
+
 @ActiveProfiles("test")
 @SpringBootTest
-public class CustomerTicketPurchaseServiceTest {
+public class CustomerTicketPaymentServiceTest {
     @Autowired
     private MemberRepository memberRepository;
 
@@ -39,7 +43,8 @@ public class CustomerTicketPurchaseServiceTest {
     private TicketRepository ticketRepository;
 
     @Autowired
-    private CustomerTicketPurchaseService customerTicketPurchaseService;
+    private CustomerTicketPaymentService customerTicketPaymentService;
+
     @Autowired
     private CardRegisterService cardRegisterService;
 
@@ -50,15 +55,23 @@ public class CustomerTicketPurchaseServiceTest {
         Customer customer = customerRepository.save(createCustomer(member, studyCafe));
         Ticket ticket1 = ticketRepository.save(createTicket(studyCafe, "시간형 티켓", TicketType.TIME, 130000L, new TimeInfo(30, 0, 0), 30));
         Ticket ticket2 = ticketRepository.save(createTicket(studyCafe, "기간형 티켓", TicketType.PERIOD, 150000L, null, 30));
-        CardInfo cardInfo = cardRegisterService.register(new CardRegisterCommand(member.getId(), "1234123412341234", "1234", "12", "1234", "123123", CardPaymentAgency.TOSS));
+        CardInfo cardInfo = cardRegisterService.register(new CardRegisterCommand(member.getId(), "1234123412341234", "1234", "12", "1234", "123123", CardPaymentAgency.NICEPAY));
 
-        PaymentResult result = customerTicketPurchaseService.purchase(studyCafe.getId(), member.getId(), ticket1.getId(), PaymentMethodType.CARD, cardInfo.id());
+        CustomerTicketPaymentCommand command = new CustomerTicketPaymentCommand(studyCafe.getId(), member.getId(), customer.getId(), ticket1.getId(), PaymentMethodType.CARD, cardInfo.id());
+
+        PaymentResult result = customerTicketPaymentService.purchase(command);
 
         System.out.println(result);
 
         Customer findCustomer = customerRepository.find(member.getId(), studyCafe.getId()).get();
 
-
+        Assertions.assertThat(findCustomer.getId()).isNotNull();
+        Assertions.assertThat(findCustomer.getMemberId()).isEqualTo(member.getId());
+        Assertions.assertThat(findCustomer.getCustomerTicket()).isNotNull();
+        Assertions.assertThat(findCustomer.getCustomerTicket().getTicketType()).isEqualTo(ticket1.getType());
+        Assertions.assertThat(findCustomer.getCustomerTicket().isExpired()).isEqualTo(false);
+        Assertions.assertThat(findCustomer.getCustomerTicket().getTimeInfo()).isEqualTo(ticket1.getTimeInfo());
+        Assertions.assertThat(findCustomer.getCustomerTicket().getExpirationDate()).isEqualTo(LocalDate.now().plusDays(ticket1.getExpirationDays()));
     }
 
     private static Ticket createTicket(StudyCafe studyCafe, String name, TicketType ticketType, Long price, TimeInfo timeInfo, int expirationDays) {

@@ -22,8 +22,9 @@ public class MemberSearchService {
     }
 
 
-    public Member getById(Long id) {
-        return memberRepository.findById(id)
+    public MemberInfo getById(Long id) {
+        Member member = memberRepository.findById(id)
             .orElseThrow(() -> new MemberNotFoundException(ExceptionCode.MEMBER_NOT_FOUND));
+        return MemberInfo.of(member);
     }
 }

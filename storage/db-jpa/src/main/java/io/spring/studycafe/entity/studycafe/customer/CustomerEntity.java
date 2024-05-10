@@ -1,15 +1,21 @@
 package io.spring.studycafe.entity.studycafe.customer;
 
-import io.spring.studycafe.domain.common.BaseModel;
 import io.spring.studycafe.domain.studycafe.customer.Customer;
+import io.spring.studycafe.entity.common.BaseModelEntity;
 import io.spring.studycafe.entity.studycafe.customerticket.CustomerTicketEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
 
 @Getter
-@Table(name = "customer")
+@Table(name = "customer",
+    uniqueConstraints = {
+        @UniqueConstraint(
+            name = "uk_customer_member_id_study_cafe_id",
+            columnNames = {"member_id", "study_cafe_id"}
+        )}
+)
 @Entity
-public class CustomerEntity extends BaseModel {
+public class CustomerEntity extends BaseModelEntity {
 
 
     @GeneratedValue(strategy = GenerationType.IDENTITY)

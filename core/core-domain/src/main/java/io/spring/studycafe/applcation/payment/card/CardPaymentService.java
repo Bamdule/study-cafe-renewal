@@ -29,6 +29,10 @@ public class CardPaymentService implements PaymentService {
         CardPaymentMethod card = cardPaymentMethodRepository.findById(order.getPaymentMethodId())
             .orElseThrow(() -> new CardPaymentMethodNotFoundException(ExceptionCode.CARD_PAYMENT_METHOD_NOT_FOUND));
 
+        if (card.getMemberId() != order.getMemberId()) {
+            throw new CardPaymentMethodNotFoundException(ExceptionCode.CARD_PAYMENT_METHOD_NOT_FOUND);
+        }
+
         CardPaymentRequest cardPaymentRequest = new CardPaymentRequest(order.getOrderCode(), order.getItemName(), order.getItemPrice(), card.getCardSecretKey());
 
         CardPaymentResponse cardPaymentResponse =
@@ -43,6 +47,7 @@ public class CardPaymentService implements PaymentService {
             order.getItemName(),
             order.getItemPrice(),
             cardPaymentResponse.message(),
+            cardPaymentResponse.resultCode(),
             cardPaymentResponse.resultType().name(),
             cardPaymentResponse.success()
         );

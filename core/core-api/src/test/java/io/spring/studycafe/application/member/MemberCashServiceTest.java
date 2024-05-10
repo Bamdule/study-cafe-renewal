@@ -43,7 +43,7 @@ public class MemberCashServiceTest {
 
         memberCashUseService.useCash(member.getId(), 1000L);
 
-        Member findMember = memberSearchService.getById(member.getId());
+        Member findMember = memberRepository.findById(member.getId()).get();
 
         Assertions.assertThat(findMember.getMemberCash().getCash()).isEqualTo(10000 - 1000);
     }
@@ -82,7 +82,7 @@ public class MemberCashServiceTest {
             System.out.println(future.get());
         }
 
-        Member findMember = memberSearchService.getById(member.getId());
+        Member findMember = memberRepository.findById(member.getId()).get();
         Assertions.assertThat(findMember.getMemberCash().getCash()).isEqualTo(remainingAmount - (numberOfThreads * usageAmount));
     }
 
@@ -120,7 +120,7 @@ public class MemberCashServiceTest {
             System.out.println(future.get());
         }
 
-        Member findMember = memberSearchService.getById(member.getId());
+        Member findMember = memberRepository.findById(member.getId()).get();
         Assertions.assertThat(findMember.getMemberCash().getCash()).isEqualTo(remainingAmount + (numberOfThreads * rechargeAmount));
 
     }
