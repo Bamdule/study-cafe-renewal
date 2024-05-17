@@ -51,16 +51,26 @@ project(':core:core-api') {
     jar { enabled = true }
 
     dependencies {
+        /*spring web*/
+        implementation 'org.springframework.boot:spring-boot-starter-web'
+
+        /*spring validation*/
+        implementation("org.springframework.boot:spring-boot-starter-validation")
+
+        /*redis*/
+        implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+
+        /*swagger*/
+        implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2'
+
         implementation project(":core:core-domain")
         implementation project(":core:core-authorization")
-        implementation 'org.springframework.boot:spring-boot-starter-data-redis'
         runtimeOnly project(":storage:db-jpa")
         runtimeOnly project(":storage:db-redis")
         runtimeOnly project(":external-api")
-        implementation 'org.springframework.boot:spring-boot-starter-web'
-        testImplementation 'org.springframework.boot:spring-boot-starter-test'
-        implementation("org.springframework.boot:spring-boot-starter-validation")
+
         testRuntimeOnly 'com.h2database:h2'
+        testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
     }
 }

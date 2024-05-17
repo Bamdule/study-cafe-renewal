@@ -15,6 +15,7 @@ import java.util.Map;
 @Slf4j
 public abstract class AbstractTokenProvider<T> {
 
+    private final String TOKEN_PREFIX = "bearer ";
     private final SignatureAlgorithm algorithm = SignatureAlgorithm.HS512;
     private final SecretKey secretKey;
     private final Long expiredMinutes;
@@ -52,10 +53,14 @@ public abstract class AbstractTokenProvider<T> {
 
     public T validate(String token) throws AuthorizationException {
         try {
+            if (token == null || token == "") {
+                throw new JwtException("token is invalid");
+            }
+
             Claims payload = Jwts.parser()
                 .verifyWith(secretKey)
                 .build()
-                .parseSignedClaims(token)
+                .parseSignedClaims(replacePrefix(token))
                 .getPayload();
 
             return objectMapper.convertValue(payload.get("data"), getPayloadClassType());
@@ -69,6 +74,10 @@ public abstract class AbstractTokenProvider<T> {
             log.warn(exception.getMessage());
             throw new AuthorizationException("token is invalid", "JWT_EXCEPTION");
         }
+    }
+
+    private String replacePrefix(String token) {
+        return token.replace(TOKEN_PREFIX, "");
     }
 
     abstract protected Class<T> getPayloadClassType();

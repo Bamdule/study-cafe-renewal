@@ -1,7 +1,7 @@
 package io.spring.studycafe.presentation.member.oauth2;
 
-import io.spring.studycafe.applcation.member.MemberRegistrationService;
 import io.spring.studycafe.applcation.member.MemberRegistrationCommand;
+import io.spring.studycafe.applcation.member.MemberRegistrationService;
 import io.spring.studycafe.applcation.member.MemberSearchService;
 import io.spring.studycafe.applcation.member.oauth2.OAuth2Platform;
 import io.spring.studycafe.applcation.member.oauth2.adapter.*;
@@ -14,12 +14,14 @@ import io.spring.studycafe.domain.member.Member;
 import io.spring.studycafe.domain.member.MemberAlreadyRegisteredException;
 import io.spring.studycafe.domain.member.RegistrationPlatform;
 import io.spring.studycafe.presentation.member.MemberRegistrationResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+@Tag(name = "OAuth2 회원 가입")
 @RequestMapping(value = "/api/v1/oauth2-member-registration")
 @RestController
 public class MemberOAuth2Controller {

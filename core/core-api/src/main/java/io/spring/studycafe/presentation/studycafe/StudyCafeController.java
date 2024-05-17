@@ -5,13 +5,15 @@ import io.spring.studycafe.applcation.studycafe.StudyCafeRegistrationCommand;
 import io.spring.studycafe.applcation.studycafe.StudyCafeService;
 import io.spring.studycafe.config.authorization.Authorization;
 import io.spring.studycafe.config.authorization.AuthorizationInfo;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
+@Tag(name = "스터디카페")
 @RequestMapping("/api/v1/study-cafes")
 @RestController
 public class StudyCafeController {
@@ -24,7 +26,7 @@ public class StudyCafeController {
 
     @PostMapping
     public ResponseEntity<StudyCafeResponse> register(
-        @Authorization AuthorizationInfo authorizationInfo,
+        @Parameter(hidden = true) @Authorization AuthorizationInfo authorizationInfo,
         @RequestBody @Valid StudyCafeRegistrationRequest request
     ) {
         StudyCafeInfo studyCafeInfo = studyCafeService.register(new StudyCafeRegistrationCommand(
@@ -46,7 +48,7 @@ public class StudyCafeController {
     }
 
     @GetMapping
-    public ResponseEntity<List<StudyCafeResponse>> findAll(@Authorization AuthorizationInfo authorizationInfo) {
+    public ResponseEntity<List<StudyCafeResponse>> findAll(@Parameter(hidden = true) @Authorization AuthorizationInfo authorizationInfo) {
         List<StudyCafeResponse> responses = studyCafeService.findAllByMemberId(authorizationInfo.id())
             .stream()
             .map(studyCafeInfo -> new StudyCafeResponse(

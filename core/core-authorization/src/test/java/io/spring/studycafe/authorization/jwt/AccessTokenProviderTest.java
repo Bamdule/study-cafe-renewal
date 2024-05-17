@@ -26,7 +26,7 @@ public class AccessTokenProviderTest {
     public void access_token_복호화_테스트() {
         String token = accessTokenProvider.generate(new AuthorizationPayload(1L, "test@test.com", "good"));
         Assertions.assertThat(token).isNotBlank();
-        AuthorizationPayload payload = accessTokenProvider.validate(token);
+        AuthorizationPayload payload = accessTokenProvider.validate(String.format("bearer %s", token));
 
         Assertions.assertThat(payload.id()).isEqualTo(1L);
         Assertions.assertThat(payload.email()).isEqualTo("test@test.com");

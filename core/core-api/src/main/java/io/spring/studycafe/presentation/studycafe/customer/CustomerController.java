@@ -10,11 +10,14 @@ import io.spring.studycafe.applcation.studycafe.customer.customerticket.Customer
 import io.spring.studycafe.applcation.studycafe.customer.customerticket.CustomerTicketPaymentService;
 import io.spring.studycafe.config.authorization.Authorization;
 import io.spring.studycafe.config.authorization.AuthorizationInfo;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+@Tag(name = "스터디 카페 회원")
 @RequestMapping(value = "/api/v1/study-cafe-customer")
 @RestController
 public class CustomerController {
@@ -31,7 +34,7 @@ public class CustomerController {
 
     @GetMapping
     public ResponseEntity<CustomerAggregateResponse> findCustomer(
-        @Authorization AuthorizationInfo authorizationInfo,
+        @Parameter(hidden = true) @Authorization AuthorizationInfo authorizationInfo,
         @RequestParam(value = "studyCafeId") Long studyCafeId
     ) {
         MemberInfo memberInfo = memberSearchService.getById(authorizationInfo.id());
@@ -42,7 +45,7 @@ public class CustomerController {
 
     @PostMapping
     public ResponseEntity<CustomerAggregateResponse> registerCustomer(
-        @Authorization AuthorizationInfo authorizationInfo,
+        @Parameter(hidden = true) @Authorization AuthorizationInfo authorizationInfo,
         @RequestParam(value = "studyCafeId") Long studyCafeId
     ) {
         MemberInfo memberInfo = memberSearchService.getById(authorizationInfo.id());
@@ -53,7 +56,7 @@ public class CustomerController {
 
     @PostMapping("/ticket-payment")
     public ResponseEntity<CustomerTicketPaymentResponse> purchaseTicket(
-        @Authorization AuthorizationInfo authorizationInfo,
+        @Parameter(hidden = true) @Authorization AuthorizationInfo authorizationInfo,
         @RequestBody @Valid CustomerTicketPaymentRequest request) {
         PaymentResult result = customerTicketPaymentService.purchase(
             new CustomerTicketPaymentCommand(
