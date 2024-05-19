@@ -11,6 +11,10 @@ public record CustomerInfo(
 ) {
 
     public static CustomerInfo of(Customer customer) {
+        if (customer == null) {
+            return null;
+        }
+
         return new CustomerInfo(
             customer.getId(),
             customer.getMemberId(),

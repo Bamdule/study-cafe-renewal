@@ -9,9 +9,14 @@ public enum ExceptionCode {
     MEMBER_ALREADY_REGISTERED("이미 가입된 회원입니다", HttpStatus.BAD_REQUEST),
     CUSTOMER_NOT_FOUND("존재하지 않는 고객입니다.", HttpStatus.NOT_FOUND),
     CUSTOMER_ALREADY_REGISTERED("이미 가입한 고객입니다", HttpStatus.BAD_REQUEST),
+    CUSTOMER_NO_TICKET("티켓을 소지하고 있지 않습니다.", HttpStatus.BAD_REQUEST),
+
 
     STUDY_CAFE_NOT_FOUND("존재하지 않는 스터디 카페입니다.", HttpStatus.NOT_FOUND),
     TICKET_NOT_FOUND("존재하지 않는 티켓입니다.", HttpStatus.NOT_FOUND),
+    SEAT_ALREADY_IN_USE("이미 사용중인 좌석입니다.", HttpStatus.BAD_REQUEST),
+    SEAT_EMPTY("빈 좌석 입니다.", HttpStatus.BAD_REQUEST),
+    SEAT_NOT_FOUND("존재하지 않는 좌석입니다.", HttpStatus.NOT_FOUND),
 
     CARD_PAYMENT_METHOD_NOT_FOUND("존재하지 않는 카드 결제수단 입니다.", HttpStatus.NOT_FOUND),
 

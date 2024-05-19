@@ -8,10 +8,12 @@ import io.spring.studycafe.domain.studycafe.customer.CustomerRepository;
 import io.spring.studycafe.domain.studycafe.ticket.Ticket;
 import io.spring.studycafe.domain.studycafe.ticket.TicketNotFoundException;
 import io.spring.studycafe.domain.studycafe.ticket.TicketRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+@Slf4j
 @Service
 public class CustomerService {
     private final CustomerRepository customerRepository;
@@ -30,6 +32,23 @@ public class CustomerService {
         Ticket ticket = ticketRepository.findById(command.ticketId())
             .orElseThrow(() -> new TicketNotFoundException(ExceptionCode.TICKET_NOT_FOUND));
         customer.updateTicket(ticket);
+
+        customerRepository.update(customer);
+    }
+
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public void deductTicketTime(CustomerTicketTimeDeductionCommand command) {
+        Customer customer = customerRepository.findWithPessimisticLockingById(command.customerId())
+            .orElseThrow(() -> new CustomerNotFoundException(ExceptionCode.CUSTOMER_NOT_FOUND));
+
+        customer.deductTime(command.timeInfo());
+
+        log.info("customerId={}, deductionTime={}, remainingTimeInfo={}, customerTicketType={}",
+            customer.getId(),
+            command.timeInfo(),
+            customer.getCustomerTicket().getTimeInfo(),
+            customer.getCustomerTicket().getTicketType()
+        );
 
         customerRepository.update(customer);
     }

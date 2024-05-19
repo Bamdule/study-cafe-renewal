@@ -2,6 +2,7 @@ package io.spring.studycafe.domain.studycafe.customerticket;
 
 import io.spring.studycafe.domain.common.BaseModel;
 import io.spring.studycafe.domain.common.TimeInfo;
+import io.spring.studycafe.domain.common.TimeInfoCalculator;
 import io.spring.studycafe.domain.studycafe.ticket.Ticket;
 import io.spring.studycafe.domain.studycafe.ticket.TicketType;
 import lombok.Getter;
@@ -49,6 +50,12 @@ public class CustomerTicket extends BaseModel {
         );
     }
 
+    public void empty() {
+        this.ticketType = DEFAULT_TICKET_TYPE;
+        this.timeInfo = DEFAULT_TIME_INFO;
+        this.expirationDate = DEFAULT_EXPIRATION_DATE;
+    }
+
     public String getRemainingTime() {
         if (ticketType == TicketType.TIME) {
             return timeInfo.toString();
@@ -72,11 +79,14 @@ public class CustomerTicket extends BaseModel {
     }
 
     public boolean isExpired() {
-        if (this.expirationDate == null) {
-            return true;
+        switch (ticketType) {
+            case TIME:
+                return this.timeInfo.isEmpty();
+            case PERIOD:
+                return this.expirationDate == null || this.expirationDate.isBefore(LocalDate.now());
         }
 
-        return this.expirationDate.isBefore(LocalDate.now());
+        return true;
     }
 
     private void addExpirationDate(int expirationDays) {
@@ -89,12 +99,16 @@ public class CustomerTicket extends BaseModel {
     }
 
     private void addTimeInfo(TimeInfo timeInfo) {
-        this.timeInfo = TimeInfo.add(this.timeInfo, timeInfo);
+        this.timeInfo = TimeInfoCalculator.add(this.timeInfo, timeInfo);
     }
 
     public void deductTime(TimeInfo timeInfo) {
         if (this.ticketType == TicketType.TIME) {
-            this.timeInfo = TimeInfo.subtract(this.timeInfo, timeInfo);
+            this.timeInfo = TimeInfoCalculator.subtract(this.timeInfo, timeInfo);
+
+            if (this.timeInfo.isEmpty()) {
+                this.empty();
+            }
         }
     }
 }

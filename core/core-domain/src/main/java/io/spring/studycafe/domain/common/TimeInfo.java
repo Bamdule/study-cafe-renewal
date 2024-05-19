@@ -1,15 +1,21 @@
 package io.spring.studycafe.domain.common;
 
-import java.time.Duration;
-import java.time.LocalDateTime;
-
 public record TimeInfo(long days, long hours, long minutes) {
-    public static TimeInfo createElapsedTimeInfo(LocalDateTime startDateTime, LocalDateTime endDateTime) {
-        Duration duration = Duration.between(startDateTime, endDateTime);
-        long days = duration.toDays();
-        long hours = duration.toHours() % 24;
-        long minutes = duration.toMinutes() % 60;
-        return new TimeInfo(days, hours, minutes);
+
+    public boolean isSmallerThan(TimeInfo time) {
+        if (time == null) {
+            throw new IllegalArgumentException("time must not be null");
+        }
+
+        return this.getTotalMinutes() < time.getTotalMinutes();
+    }
+
+    public boolean isBiggerThan(TimeInfo time) {
+        if (time == null) {
+            throw new IllegalArgumentException("time must not be null");
+        }
+
+        return this.getTotalMinutes() > time.getTotalMinutes();
     }
 
     public static TimeInfo createInMinutes(long totalMinutes) {
@@ -19,47 +25,12 @@ public record TimeInfo(long days, long hours, long minutes) {
         return new TimeInfo(days, hours, minutes);
     }
 
-    public static TimeInfo subtract(TimeInfo start, TimeInfo end) {
-        if (start == null || end == null) {
-            throw new IllegalArgumentException("start와 end는 필수 값입니다.");
-        }
-
-        long diff = start.getTotalMinutes() - end.getTotalMinutes();
-
-        // 차이가 음수일 경우 처리
-        if (diff < 0) {
-            return new TimeInfo(0,0,0);
-        }
-
-        return TimeInfo.createInMinutes(diff);
-    }
-
-    public static TimeInfo add(TimeInfo time1, TimeInfo time2) {
-        if (time1 == null || time2 == null) {
-            throw new IllegalArgumentException("time1와 time2는 필수 값입니다.");
-        }
-
-        long totalMinutes = time1.getTotalMinutes() + time1.getTotalMinutes();
-
-        return TimeInfo.createInMinutes(totalMinutes);
-    }
-
-    /**
-     * 두 시간을 비교하는 메소드
-     *
-     * @param start
-     * @param end
-     * @return 0 = same, positive = start is larger, negative = end is larger
-     */
-    public static int compare(TimeInfo start, TimeInfo end) {
-        long totalMinutesFirst = start.getTotalMinutes();
-        long totalMinutesSecond = end.getTotalMinutes();
-
-        return Long.compare(totalMinutesFirst, totalMinutesSecond);
-    }
-
-    private long getTotalMinutes() {
+    public long getTotalMinutes() {
         return (this.days * 24 * 60) + (this.hours * 60) + this.minutes;
+    }
+
+    public boolean isEmpty() {
+        return this.getTotalMinutes() < 1;
     }
 
     @Override

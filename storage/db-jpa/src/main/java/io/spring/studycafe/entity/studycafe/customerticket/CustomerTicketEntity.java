@@ -31,7 +31,7 @@ public class CustomerTicketEntity extends BaseModelEntity {
 
     @OneToOne(fetch = FetchType.LAZY)
     @MapsId
-    @JoinColumn(name = "customerId")
+    @JoinColumn(name = "customer_id")
     private CustomerEntity customer;
 
     protected CustomerTicketEntity() {

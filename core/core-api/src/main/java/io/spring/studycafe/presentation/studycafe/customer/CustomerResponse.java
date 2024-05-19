@@ -5,15 +5,17 @@ import io.spring.studycafe.applcation.studycafe.customer.CustomerInfo;
 public record CustomerResponse(
     Long id,
     Long memberId,
-    Long studyCafeId,
     CustomerTicketResponse customerTicket
 ) {
 
     public static CustomerResponse of(CustomerInfo customerInfo) {
+        if (customerInfo == null) {
+            return null;
+        }
+
         return new CustomerResponse(
             customerInfo.id(),
             customerInfo.memberId(),
-            customerInfo.studyCafeId(),
             CustomerTicketResponse.of(customerInfo.customerTicketInfo())
         );
     }

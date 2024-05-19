@@ -6,9 +6,6 @@ import jakarta.validation.constraints.NotNull;
 public record CustomerTicketPaymentRequest(
     @NotNull(message = "스터디 카페 아이디는 필수 값입니다.")
     Long studyCafeId,
-    @NotNull(message = "고객 아이디는 필수 값입니다.")
-    Long customerId,
-
     @NotNull(message = "이용권 아이디는 필수 값입니다.")
     Long ticketId,
 

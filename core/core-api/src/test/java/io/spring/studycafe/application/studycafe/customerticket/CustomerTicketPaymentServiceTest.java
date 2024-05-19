@@ -50,14 +50,14 @@ public class CustomerTicketPaymentServiceTest {
 
     @Test
     public void 고객_좌석_이용권_구매_테스트() {
-        Member member = memberRepository.save(new Member("hi11@test.com", "HI", RegistrationPlatform.KAKAO));
+        Member member = memberRepository.save(new Member("hi12@test.com", "HI", RegistrationPlatform.KAKAO));
         StudyCafe studyCafe = studyCafeRepository.save(createStudyCafe(member));
         Customer customer = customerRepository.save(createCustomer(member, studyCafe));
         Ticket ticket1 = ticketRepository.save(createTicket(studyCafe, "시간형 티켓", TicketType.TIME, 130000L, new TimeInfo(30, 0, 0), 30));
         Ticket ticket2 = ticketRepository.save(createTicket(studyCafe, "기간형 티켓", TicketType.PERIOD, 150000L, null, 30));
         CardInfo cardInfo = cardRegisterService.register(new CardRegisterCommand(member.getId(), "1234123412341234", "1234", "12", "1234", "123123", CardPaymentAgency.NICEPAY));
 
-        CustomerTicketPaymentCommand command = new CustomerTicketPaymentCommand(studyCafe.getId(), member.getId(), customer.getId(), ticket1.getId(), PaymentMethodType.CARD, cardInfo.id());
+        CustomerTicketPaymentCommand command = new CustomerTicketPaymentCommand(studyCafe.getId(), member.getId(), ticket1.getId(), PaymentMethodType.CARD, cardInfo.id());
 
         PaymentResult result = customerTicketPaymentService.purchase(command);
 

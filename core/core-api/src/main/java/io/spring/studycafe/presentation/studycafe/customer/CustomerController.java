@@ -8,6 +8,8 @@ import io.spring.studycafe.applcation.studycafe.customer.CustomerRegistrationCom
 import io.spring.studycafe.applcation.studycafe.customer.CustomerService;
 import io.spring.studycafe.applcation.studycafe.customer.customerticket.CustomerTicketPaymentCommand;
 import io.spring.studycafe.applcation.studycafe.customer.customerticket.CustomerTicketPaymentService;
+import io.spring.studycafe.applcation.studycafe.seat.SeatInfo;
+import io.spring.studycafe.applcation.studycafe.seat.SeatService;
 import io.spring.studycafe.config.authorization.Authorization;
 import io.spring.studycafe.config.authorization.AuthorizationInfo;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -25,11 +27,13 @@ public class CustomerController {
     private final CustomerService customerService;
     private final MemberSearchService memberSearchService;
     private final CustomerTicketPaymentService customerTicketPaymentService;
+    private final SeatService seatService;
 
-    public CustomerController(CustomerService customerService, MemberSearchService memberSearchService, CustomerTicketPaymentService customerTicketPaymentService) {
+    public CustomerController(CustomerService customerService, MemberSearchService memberSearchService, CustomerTicketPaymentService customerTicketPaymentService, SeatService seatService) {
         this.customerService = customerService;
         this.memberSearchService = memberSearchService;
         this.customerTicketPaymentService = customerTicketPaymentService;
+        this.seatService = seatService;
     }
 
     @GetMapping
@@ -62,15 +66,33 @@ public class CustomerController {
             new CustomerTicketPaymentCommand(
                 request.studyCafeId(),
                 authorizationInfo.id(),
-                request.customerId(),
                 request.ticketId(),
                 request.paymentMethodType(),
                 request.paymentMethodId()
             )
         );
 
-
         return ResponseEntity.ok(CustomerTicketPaymentResponse.of(result));
+    }
+
+    @PatchMapping("/seat-use")
+    public ResponseEntity<SeatUsageResponse> useSeat(
+        @RequestParam(value = "seatId") Long seatId,
+        @Parameter(hidden = true) @Authorization AuthorizationInfo authorizationInfo
+    ) {
+        SeatInfo seatInfo = seatService.useSeat(seatId, authorizationInfo.id());
+
+        return ResponseEntity.ok(new SeatUsageResponse(seatInfo));
+    }
+
+    @PatchMapping("/seat-leave")
+    public ResponseEntity<SeatLeaveResponse> leaveSeat(
+        @RequestParam(value = "studyCafeId") Long studyCafeId,
+        @Parameter(hidden = true) @Authorization AuthorizationInfo authorizationInfo
+    ) {
+        SeatInfo seatInfo = seatService.leaveSeat(studyCafeId, authorizationInfo.id());
+
+        return ResponseEntity.ok(new SeatLeaveResponse(seatInfo));
     }
 
 }

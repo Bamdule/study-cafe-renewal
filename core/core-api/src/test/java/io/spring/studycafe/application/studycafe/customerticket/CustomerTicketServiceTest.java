@@ -1,6 +1,7 @@
 package io.spring.studycafe.application.studycafe.customerticket;
 
 import io.spring.studycafe.domain.common.TimeInfo;
+import io.spring.studycafe.domain.common.TimeInfoCalculator;
 import io.spring.studycafe.domain.member.Member;
 import io.spring.studycafe.domain.member.MemberRepository;
 import io.spring.studycafe.domain.member.RegistrationPlatform;
@@ -56,7 +57,7 @@ public class CustomerTicketServiceTest {
 
         System.out.println(customerTicket.getRemainingTime());
 
-        TimeInfo elapsedTimeInfo = TimeInfo.createElapsedTimeInfo(LocalDateTime.now().minusHours(5).minusMinutes(21), LocalDateTime.now());
+        TimeInfo elapsedTimeInfo = TimeInfoCalculator.createElapsedTimeInfo(LocalDateTime.now().minusHours(5).minusMinutes(21), LocalDateTime.now());
 
         customer.deductTime(elapsedTimeInfo);
 

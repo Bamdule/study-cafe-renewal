@@ -40,7 +40,7 @@ public class CustomerTicketPaymentService {
     public PaymentResult purchase(CustomerTicketPaymentCommand command) {
         validate(command);
 
-        Customer customer = customerRepository.findById(command.customerId())
+        Customer customer = customerRepository.find(command.memberId(), command.studyCafeId())
             .orElseThrow(() -> new CustomerNotFoundException(ExceptionCode.CUSTOMER_NOT_FOUND));
 
         Ticket ticket = ticketRepository.findById(command.ticketId())
@@ -71,7 +71,7 @@ public class CustomerTicketPaymentService {
     }
 
     private void validate(CustomerTicketPaymentCommand command) {
-        Customer customer = customerRepository.findById(command.customerId())
+        Customer customer = customerRepository.find(command.memberId(), command.studyCafeId())
             .orElseThrow(() -> new CustomerNotFoundException(ExceptionCode.CUSTOMER_NOT_FOUND));
         Ticket ticket = ticketRepository.findById(command.ticketId())
             .orElseThrow(() -> new TicketNotFoundException(ExceptionCode.TICKET_NOT_FOUND));
