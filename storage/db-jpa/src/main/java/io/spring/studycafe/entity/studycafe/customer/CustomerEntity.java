@@ -41,7 +41,14 @@ public class CustomerEntity extends BaseModelEntity {
     }
 
     public Customer to() {
-        return new Customer(this.id, this.memberId, this.studyCafeId, this.customerTicket.to(), this.getCreatedAt(), this.getUpdatedAt());
+        return new Customer(
+            this.id,
+            this.memberId,
+            this.studyCafeId,
+            this.customerTicket == null ? null : this.customerTicket.to(),
+            this.getCreatedAt(),
+            this.getUpdatedAt()
+        );
     }
 
     public static CustomerEntity of(Customer customer) {

@@ -44,7 +44,6 @@ public class SeatService {
 
         seatRepository.update(seat);
 
-
         return new SeatInfo(seat);
     }
 
