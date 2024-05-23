@@ -7,7 +7,7 @@ public interface CustomerRepository {
 
     Optional<Customer> findWithPessimisticLockingById(Long id);
 
-    Optional<Customer> find(Long memberId, Long studyCafeId);
+    Optional<Customer> find(CustomerFindQuery query);
 
     Customer save(Customer customer);
 

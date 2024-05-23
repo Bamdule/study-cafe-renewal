@@ -6,6 +6,10 @@ import java.time.LocalDateTime;
 public class TimeInfoCalculator {
 
     public static TimeInfo createElapsedTimeInfo(LocalDateTime startDateTime, LocalDateTime endDateTime) {
+        if (startDateTime == null || endDateTime == null) {
+            throw new IllegalArgumentException(String.format("parameter is invalid [startDateTime=%s, endDateTime=%s]", startDateTime, endDateTime));
+        }
+
         Duration duration = Duration.between(startDateTime, endDateTime);
         long days = duration.toDays();
         long hours = duration.toHours() % 24;

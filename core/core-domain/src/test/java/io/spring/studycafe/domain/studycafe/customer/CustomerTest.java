@@ -25,7 +25,8 @@ class CustomerTest {
             LocalDateTime.now()
         );
 
-        customer.deductTime(new TimeInfo(1, 5, 1));
+        customer.getCustomerTicket()
+            .deductTime(new TimeInfo(1, 5, 1));
 
 
         Assertions.assertThat(customer.getCustomerTicket().getTimeInfo()).isEqualTo(new TimeInfo(0, 5, 9));

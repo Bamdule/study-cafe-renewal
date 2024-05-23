@@ -8,6 +8,7 @@ import io.spring.studycafe.domain.member.RegistrationPlatform;
 import io.spring.studycafe.domain.studycafe.StudyCafe;
 import io.spring.studycafe.domain.studycafe.StudyCafeRepository;
 import io.spring.studycafe.domain.studycafe.customer.Customer;
+import io.spring.studycafe.domain.studycafe.customer.CustomerFindQuery;
 import io.spring.studycafe.domain.studycafe.customer.CustomerRepository;
 import io.spring.studycafe.domain.studycafe.customerticket.CustomerTicket;
 import io.spring.studycafe.domain.studycafe.ticket.Ticket;
@@ -59,11 +60,12 @@ public class CustomerTicketServiceTest {
 
         TimeInfo elapsedTimeInfo = TimeInfoCalculator.createElapsedTimeInfo(LocalDateTime.now().minusHours(5).minusMinutes(21), LocalDateTime.now());
 
-        customer.deductTime(elapsedTimeInfo);
+        customer.getCustomerTicket()
+            .deductTime(elapsedTimeInfo);
 
         customerRepository.update(customer);
 
-        Customer findCustomer = customerRepository.find(member.getId(), studyCafe.getId()).get();
+        Customer findCustomer = customerRepository.find(new CustomerFindQuery(studyCafe.getId(), member.getId())).get();
         System.out.println(findCustomer.getCustomerTicket().getRemainingTime());
     }
 

@@ -15,7 +15,25 @@ public record SeatInfo(
     LocalDateTime seatUsageStartDateTime
 ) {
 
-    public SeatInfo(Seat seat) {
-        this(seat.getId(), seat.getNumber(), CustomerInfo.of(seat.getCustomer()), seat.getStudyCafeId(), seat.getState(), seat.getSeatUsageStartDateTime());
+    public static SeatInfo of(Seat seat) {
+        if (seat.isUsing()) {
+            return new SeatInfo(
+                seat.getId(),
+                seat.getNumber(),
+                CustomerInfo.of(seat.getCustomer()),
+                seat.getStudyCafeId(),
+                seat.getState(),
+                seat.getSeatUsageStartDateTime()
+            );
+        }
+
+        return new SeatInfo(
+            seat.getId(),
+            seat.getNumber(),
+            null,
+            seat.getStudyCafeId(),
+            seat.getState(),
+            null
+        );
     }
 }

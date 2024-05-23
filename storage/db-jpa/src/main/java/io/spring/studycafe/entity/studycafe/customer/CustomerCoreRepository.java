@@ -2,6 +2,7 @@ package io.spring.studycafe.entity.studycafe.customer;
 
 import io.spring.studycafe.domain.common.ExceptionCode;
 import io.spring.studycafe.domain.studycafe.customer.Customer;
+import io.spring.studycafe.domain.studycafe.customer.CustomerFindQuery;
 import io.spring.studycafe.domain.studycafe.customer.CustomerNotFoundException;
 import io.spring.studycafe.domain.studycafe.customer.CustomerRepository;
 import org.springframework.stereotype.Repository;
@@ -28,8 +29,8 @@ public class CustomerCoreRepository implements CustomerRepository {
     }
 
     @Override
-    public Optional<Customer> find(Long memberId, Long studyCafeId) {
-        return customerJpaRepository.findByMemberIdAndAndStudyCafeId(memberId, studyCafeId)
+    public Optional<Customer> find(CustomerFindQuery query) {
+        return customerJpaRepository.findByMemberIdAndAndStudyCafeId(query.memberId(), query.studyCafeId())
             .map(CustomerEntity::to);
     }
 

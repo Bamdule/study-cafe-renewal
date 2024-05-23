@@ -21,6 +21,10 @@ public class Seat {
     private LocalDateTime seatUsageStartDateTime;
 
     public TimeInfo getUsedTimeInfo() {
+        if (this.isEmpty()) {
+            throw new SeatEmptyException(ExceptionCode.SEAT_EMPTY);
+        }
+
         return TimeInfoCalculator.createElapsedTimeInfo(this.seatUsageStartDateTime, LocalDateTime.now());
     }
 
@@ -59,10 +63,6 @@ public class Seat {
      * 3. 빈 좌석 정보로 갱신
      */
     public void leave() {
-        if (this.isEmpty()) {
-            throw new SeatEmptyException(ExceptionCode.SEAT_EMPTY);
-        }
-
         this.customer = null;
         this.seatUsageStartDateTime = null;
         this.state = SeatState.EMPTY;

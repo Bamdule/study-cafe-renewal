@@ -4,6 +4,7 @@ import io.spring.studycafe.applcation.event.EventPublisher;
 import io.spring.studycafe.applcation.studycafe.customer.customerticket.event.CustomerTicketTimeDeductionEvent;
 import io.spring.studycafe.domain.common.ExceptionCode;
 import io.spring.studycafe.domain.studycafe.customer.Customer;
+import io.spring.studycafe.domain.studycafe.customer.CustomerFindQuery;
 import io.spring.studycafe.domain.studycafe.customer.CustomerNotFoundException;
 import io.spring.studycafe.domain.studycafe.customer.CustomerRepository;
 import io.spring.studycafe.domain.studycafe.seat.*;
@@ -25,22 +26,27 @@ public class SeatService {
         this.eventPublisher = eventPublisher;
     }
 
+    @Transactional(readOnly = true)
     public List<SeatInfo> findAll(Long studyCafeId) {
-        return seatRepository.findAll(studyCafeId).stream().map(SeatInfo::new).toList();
+        return seatRepository.findAll(studyCafeId).stream().map(SeatInfo::of).toList();
     }
 
     @Transactional
     public SeatInfo useSeat(Long seatId, Long memberId) {
+        // 좌석 조회
         Seat seat = seatRepository.findById(seatId)
             .orElseThrow(() -> new SeatNotFoundException(ExceptionCode.SEAT_NOT_FOUND));
 
+        // 좌석 사용중 여부 체크
         if (seat.isUsing()) {
             throw new SeatAlreadyInUseException(ExceptionCode.SEAT_ALREADY_IN_USE);
         }
 
-        Customer customer = customerRepository.find(memberId, seat.getStudyCafeId())
+        // 고객 정보 조회
+        Customer customer = customerRepository.find(new CustomerFindQuery(seat.getStudyCafeId(), memberId))
             .orElseThrow(() -> new CustomerNotFoundException(ExceptionCode.CUSTOMER_NOT_FOUND));
 
+        // 다른 좌석을 사용하고 있는지 체크
         seatRepository.findByStudyCafeIdAndCustomerId(seat.getStudyCafeId(), customer.getId())
             .ifPresent(s -> {
                 throw new SeatOnlyOneUsableException(ExceptionCode.SEAT_ONLY_ONE_USABLE);
@@ -48,18 +54,19 @@ public class SeatService {
 
 
         seat.use(customer);
-
         seatRepository.update(seat);
 
-        return new SeatInfo(seat);
+        return SeatInfo.of(seat);
     }
 
     @Transactional
     public SeatInfo leaveSeat(Long studyCafeId, Long seatId, Long memberId) {
 
-        Customer customer = customerRepository.find(memberId, studyCafeId)
+        // 고객 정보 조회
+        Customer customer = customerRepository.find(new CustomerFindQuery(studyCafeId, memberId))
             .orElseThrow(() -> new CustomerNotFoundException(ExceptionCode.CUSTOMER_NOT_FOUND));
 
+        // 내 좌석 정보 조회
         Seat seat = seatRepository.findByStudyCafeIdAndCustomerId(studyCafeId, customer.getId())
             .orElseThrow(() -> new SeatNotFoundException(ExceptionCode.SEAT_INVALID));
 
@@ -80,7 +87,7 @@ public class SeatService {
         seat.leave();
         seatRepository.update(seat);
 
-        return new SeatInfo(seat);
+        return SeatInfo.of(seat);
     }
 
 

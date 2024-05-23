@@ -2,6 +2,7 @@ package io.spring.studycafe.application.studycafe.customer;
 
 import io.spring.studycafe.domain.common.TimeInfo;
 import io.spring.studycafe.domain.studycafe.customer.Customer;
+import io.spring.studycafe.domain.studycafe.customer.CustomerFindQuery;
 import io.spring.studycafe.domain.studycafe.customer.CustomerRepository;
 import io.spring.studycafe.domain.studycafe.customerticket.CustomerTicket;
 import io.spring.studycafe.domain.studycafe.ticket.Ticket;
@@ -50,7 +51,7 @@ public class CustomerServiceTest {
 
         customerRepository.update(savedCustomer);
 
-        Customer findCustomer = customerRepository.find(1L, 1L).get();
+        Customer findCustomer = customerRepository.find(new CustomerFindQuery(1L, 1L)).get();
 
 
         Assertions.assertThat(savedCustomer.getId()).isNotNull();

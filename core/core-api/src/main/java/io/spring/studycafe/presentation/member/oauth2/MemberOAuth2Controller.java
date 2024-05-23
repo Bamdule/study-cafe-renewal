@@ -14,6 +14,7 @@ import io.spring.studycafe.domain.member.Member;
 import io.spring.studycafe.domain.member.MemberAlreadyRegisteredException;
 import io.spring.studycafe.domain.member.RegistrationPlatform;
 import io.spring.studycafe.presentation.member.MemberRegistrationResponse;
+import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -47,7 +48,7 @@ public class MemberOAuth2Controller {
             .create();
         return ResponseEntity.ok(authorizationUrl);
     }
-
+    @Hidden
     /**
      * OAuth2 Authorization Server에서 호출하는 API
      * 인증 성공 시 Resource AccessToken으로 Platform member resource를 요청한다.

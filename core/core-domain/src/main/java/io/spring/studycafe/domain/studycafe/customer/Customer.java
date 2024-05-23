@@ -3,6 +3,7 @@ package io.spring.studycafe.domain.studycafe.customer;
 import io.spring.studycafe.domain.common.BaseModel;
 import io.spring.studycafe.domain.common.TimeInfo;
 import io.spring.studycafe.domain.studycafe.customerticket.CustomerTicket;
+import io.spring.studycafe.domain.studycafe.seat.Seat;
 import io.spring.studycafe.domain.studycafe.ticket.Ticket;
 import io.spring.studycafe.domain.studycafe.ticket.TicketType;
 import lombok.Getter;
@@ -32,10 +33,6 @@ public class Customer extends BaseModel {
 
     public void updateTicket(Ticket ticket) {
         customerTicket.updateTicket(ticket);
-    }
-
-    public void deductTime(TimeInfo timeInfo) {
-        customerTicket.deductTime(timeInfo);
     }
 
     public boolean hasTicket() {

@@ -15,6 +15,7 @@ import io.spring.studycafe.domain.paymentmethod.card.CardPaymentAgency;
 import io.spring.studycafe.domain.studycafe.StudyCafe;
 import io.spring.studycafe.domain.studycafe.StudyCafeRepository;
 import io.spring.studycafe.domain.studycafe.customer.Customer;
+import io.spring.studycafe.domain.studycafe.customer.CustomerFindQuery;
 import io.spring.studycafe.domain.studycafe.customer.CustomerRepository;
 import io.spring.studycafe.domain.studycafe.ticket.Ticket;
 import io.spring.studycafe.domain.studycafe.ticket.TicketRepository;
@@ -63,7 +64,7 @@ public class CustomerTicketPaymentServiceTest {
 
         System.out.println(result);
 
-        Customer findCustomer = customerRepository.find(member.getId(), studyCafe.getId()).get();
+        Customer findCustomer = customerRepository.find(new CustomerFindQuery(studyCafe.getId(), member.getId())).get();
 
         Assertions.assertThat(findCustomer.getId()).isNotNull();
         Assertions.assertThat(findCustomer.getMemberId()).isEqualTo(member.getId());

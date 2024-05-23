@@ -1,10 +1,7 @@
 package io.spring.studycafe.applcation.studycafe.customer;
 
 import io.spring.studycafe.domain.common.ExceptionCode;
-import io.spring.studycafe.domain.studycafe.customer.Customer;
-import io.spring.studycafe.domain.studycafe.customer.CustomerAlreadyRegisteredException;
-import io.spring.studycafe.domain.studycafe.customer.CustomerNotFoundException;
-import io.spring.studycafe.domain.studycafe.customer.CustomerRepository;
+import io.spring.studycafe.domain.studycafe.customer.*;
 import io.spring.studycafe.domain.studycafe.ticket.Ticket;
 import io.spring.studycafe.domain.studycafe.ticket.TicketNotFoundException;
 import io.spring.studycafe.domain.studycafe.ticket.TicketRepository;
@@ -41,7 +38,9 @@ public class CustomerService {
         Customer customer = customerRepository.findWithPessimisticLockingById(command.customerId())
             .orElseThrow(() -> new CustomerNotFoundException(ExceptionCode.CUSTOMER_NOT_FOUND));
 
-        customer.deductTime(command.timeInfo());
+        customer
+            .getCustomerTicket()
+            .deductTime(command.timeInfo());
 
         log.info("customerId={}, deductionTime={}, remainingTimeInfo={}, customerTicketType={}",
             customer.getId(),
@@ -55,7 +54,7 @@ public class CustomerService {
 
     @Transactional
     public CustomerInfo register(CustomerRegistrationCommand command) {
-        if (customerRepository.find(command.memberId(), command.studyCafeId()).isPresent()) {
+        if (customerRepository.find(new CustomerFindQuery(command.studyCafeId(), command.memberId())).isPresent()) {
             throw new CustomerAlreadyRegisteredException(ExceptionCode.CUSTOMER_ALREADY_REGISTERED);
         }
 
@@ -64,7 +63,7 @@ public class CustomerService {
     }
 
     public CustomerInfo find(Long memberId, Long studyCafeId) {
-        Customer customer = customerRepository.find(memberId, studyCafeId)
+        Customer customer = customerRepository.find(new CustomerFindQuery(studyCafeId, memberId))
             .orElseThrow(() -> new CustomerNotFoundException(ExceptionCode.CUSTOMER_NOT_FOUND));
         return CustomerInfo.of(customer);
     }

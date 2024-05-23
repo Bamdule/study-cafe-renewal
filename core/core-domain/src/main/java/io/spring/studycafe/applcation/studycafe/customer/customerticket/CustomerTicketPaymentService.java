@@ -11,6 +11,7 @@ import io.spring.studycafe.domain.order.Order;
 import io.spring.studycafe.domain.studycafe.StudyCafeRepository;
 import io.spring.studycafe.domain.studycafe.customer.Customer;
 import io.spring.studycafe.domain.studycafe.customer.CustomerNotFoundException;
+import io.spring.studycafe.domain.studycafe.customer.CustomerFindQuery;
 import io.spring.studycafe.domain.studycafe.customer.CustomerRepository;
 import io.spring.studycafe.domain.studycafe.ticket.Ticket;
 import io.spring.studycafe.domain.studycafe.ticket.TicketNotFoundException;
@@ -40,7 +41,7 @@ public class CustomerTicketPaymentService {
     public PaymentResult purchase(CustomerTicketPaymentCommand command) {
         validate(command);
 
-        Customer customer = customerRepository.find(command.memberId(), command.studyCafeId())
+        Customer customer = customerRepository.find(new CustomerFindQuery(command.studyCafeId(), command.memberId()))
             .orElseThrow(() -> new CustomerNotFoundException(ExceptionCode.CUSTOMER_NOT_FOUND));
 
         Ticket ticket = ticketRepository.findById(command.ticketId())
@@ -71,7 +72,7 @@ public class CustomerTicketPaymentService {
     }
 
     private void validate(CustomerTicketPaymentCommand command) {
-        Customer customer = customerRepository.find(command.memberId(), command.studyCafeId())
+        Customer customer = customerRepository.find(new CustomerFindQuery(command.studyCafeId(), command.memberId()))
             .orElseThrow(() -> new CustomerNotFoundException(ExceptionCode.CUSTOMER_NOT_FOUND));
         Ticket ticket = ticketRepository.findById(command.ticketId())
             .orElseThrow(() -> new TicketNotFoundException(ExceptionCode.TICKET_NOT_FOUND));
