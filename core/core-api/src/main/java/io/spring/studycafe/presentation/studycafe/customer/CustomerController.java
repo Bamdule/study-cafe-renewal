@@ -2,19 +2,13 @@ package io.spring.studycafe.presentation.studycafe.customer;
 
 import io.spring.studycafe.applcation.member.MemberInfo;
 import io.spring.studycafe.applcation.member.MemberSearchService;
-import io.spring.studycafe.applcation.payment.PaymentResult;
 import io.spring.studycafe.applcation.studycafe.customer.CustomerInfo;
 import io.spring.studycafe.applcation.studycafe.customer.CustomerRegistrationCommand;
 import io.spring.studycafe.applcation.studycafe.customer.CustomerService;
-import io.spring.studycafe.applcation.studycafe.customer.customerticket.CustomerTicketPaymentCommand;
-import io.spring.studycafe.applcation.studycafe.customer.customerticket.CustomerTicketPaymentService;
-import io.spring.studycafe.applcation.studycafe.seat.SeatInfo;
-import io.spring.studycafe.applcation.studycafe.seat.SeatService;
 import io.spring.studycafe.config.authorization.Authorization;
 import io.spring.studycafe.config.authorization.AuthorizationInfo;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -26,14 +20,10 @@ public class CustomerController {
 
     private final CustomerService customerService;
     private final MemberSearchService memberSearchService;
-    private final CustomerTicketPaymentService customerTicketPaymentService;
-    private final SeatService seatService;
 
-    public CustomerController(CustomerService customerService, MemberSearchService memberSearchService, CustomerTicketPaymentService customerTicketPaymentService, SeatService seatService) {
+    public CustomerController(CustomerService customerService, MemberSearchService memberSearchService) {
         this.customerService = customerService;
         this.memberSearchService = memberSearchService;
-        this.customerTicketPaymentService = customerTicketPaymentService;
-        this.seatService = seatService;
     }
 
     @GetMapping
@@ -57,42 +47,4 @@ public class CustomerController {
 
         return ResponseEntity.status(HttpStatus.CREATED).body(CustomerAggregateResponse.of(memberInfo, customerInfo));
     }
-
-    @PostMapping("/ticket-payment")
-    public ResponseEntity<CustomerTicketPaymentResponse> purchaseTicket(
-        @Parameter(hidden = true) @Authorization AuthorizationInfo authorizationInfo,
-        @RequestBody @Valid CustomerTicketPaymentRequest request) {
-        PaymentResult result = customerTicketPaymentService.purchase(
-            new CustomerTicketPaymentCommand(
-                request.studyCafeId(),
-                authorizationInfo.id(),
-                request.ticketId(),
-                request.paymentMethodType(),
-                request.paymentMethodId()
-            )
-        );
-
-        return ResponseEntity.ok(CustomerTicketPaymentResponse.of(result));
-    }
-
-    @PatchMapping("/seat-use")
-    public ResponseEntity<SeatUsageResponse> useSeat(
-        @RequestParam(value = "seatId") Long seatId,
-        @Parameter(hidden = true) @Authorization AuthorizationInfo authorizationInfo
-    ) {
-        SeatInfo seatInfo = seatService.useSeat(seatId, authorizationInfo.id());
-
-        return ResponseEntity.ok(new SeatUsageResponse(seatInfo));
-    }
-
-    @PatchMapping("/seat-leave")
-    public ResponseEntity<SeatLeaveResponse> leaveSeat(
-        @RequestParam(value = "studyCafeId") Long studyCafeId,
-        @Parameter(hidden = true) @Authorization AuthorizationInfo authorizationInfo
-    ) {
-        SeatInfo seatInfo = seatService.leaveSeat(studyCafeId, authorizationInfo.id());
-
-        return ResponseEntity.ok(new SeatLeaveResponse(seatInfo));
-    }
-
 }

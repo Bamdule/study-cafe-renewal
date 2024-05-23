@@ -1,8 +1,8 @@
-package io.spring.studycafe.presentation.studycafe.customer;
+package io.spring.studycafe.presentation.studycafe.ticket;
 
 import io.spring.studycafe.applcation.payment.PaymentResult;
 
-public record CustomerTicketPaymentResponse(
+public record TicketPaymentResponse(
     Long paymentId,
 
     String itemName,
@@ -13,8 +13,8 @@ public record CustomerTicketPaymentResponse(
     String resultType,
     boolean success
 ) {
-    public static CustomerTicketPaymentResponse of(PaymentResult paymentResult) {
-        return new CustomerTicketPaymentResponse(
+    public static TicketPaymentResponse of(PaymentResult paymentResult) {
+        return new TicketPaymentResponse(
             paymentResult.paymentId(),
             paymentResult.itemName(),
             paymentResult.itemPrice(),

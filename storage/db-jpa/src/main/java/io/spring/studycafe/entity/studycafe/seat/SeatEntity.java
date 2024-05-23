@@ -30,7 +30,7 @@ public class SeatEntity {
     @Column(name = "number", nullable = false)
     private int number;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "customer_id")
     private CustomerEntity customer;
     @Column(name = "study_cafe_id", nullable = false)
@@ -58,13 +58,24 @@ public class SeatEntity {
     }
 
     public Seat toModel() {
+        if (state == SeatState.IN_USE) {
+            return new Seat(
+                this.id,
+                this.number,
+                this.customer.to(),
+                this.studyCafeId,
+                this.state,
+                this.seatUsageStartDateTime
+            );
+        }
+
         return new Seat(
             this.id,
             this.number,
-            this.customer == null ? null : this.customer.to(),
+            null,
             this.studyCafeId,
             this.state,
-            this.seatUsageStartDateTime
+            null
         );
     }
 

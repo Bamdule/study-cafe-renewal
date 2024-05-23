@@ -4,12 +4,15 @@ import io.spring.studycafe.applcation.studycafe.seat.SeatInfo;
 import io.spring.studycafe.applcation.studycafe.seat.SeatService;
 import io.spring.studycafe.config.authorization.Authorization;
 import io.spring.studycafe.config.authorization.AuthorizationInfo;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RequestMapping(value = "/api/v1/seats")
+@Tag(name = "좌석")
+@RequestMapping(value = "/api/v1/study-cafe-seats")
 @RestController
 public class SeatController {
 
@@ -28,23 +31,24 @@ public class SeatController {
         return ResponseEntity.ok(responses);
     }
 
-//    @PatchMapping("/{seatId}/use")
-//    public ResponseEntity<SeatResponse> useSeat(
-//        @PathVariable(value = "seatId") Long seatId,
-//        @Authorization AuthorizationInfo authorizationInfo
-//    ) {
-//        SeatInfo seatInfo = seatService.useSeat(seatId, authorizationInfo.id());
-//
-//        return ResponseEntity.ok(new SeatResponse(seatInfo));
-//    }
-//
-//    @PatchMapping("/{seatId}/leave")
-//    public ResponseEntity<SeatResponse> leaveSeat(
-//        @PathVariable(value = "seatId") Long seatId,
-//        @Authorization AuthorizationInfo authorizationInfo
-//    ) {
-//        SeatInfo seatInfo = seatService.leaveSeat(seatId, authorizationInfo.id());
-//
-//        return ResponseEntity.ok(new SeatResponse(seatInfo));
-//    }
+    @PatchMapping("/{seatId}/use")
+    public ResponseEntity<SeatUsageResponse> useSeat(
+        @PathVariable(value = "seatId") Long seatId,
+        @Parameter(hidden = true) @Authorization AuthorizationInfo authorizationInfo
+    ) {
+        SeatInfo seatInfo = seatService.useSeat(seatId, authorizationInfo.id());
+
+        return ResponseEntity.ok(new SeatUsageResponse(seatInfo));
+    }
+
+    @PatchMapping("/{seatId}/leave")
+    public ResponseEntity<SeatLeaveResponse> leaveSeat(
+        @PathVariable(value = "seatId") Long seatId,
+        @RequestParam(value = "studyCafeId") Long studyCafeId,
+        @Parameter(hidden = true) @Authorization AuthorizationInfo authorizationInfo
+    ) {
+        SeatInfo seatInfo = seatService.leaveSeat(studyCafeId, seatId, authorizationInfo.id());
+
+        return ResponseEntity.ok(new SeatLeaveResponse(seatInfo));
+    }
 }

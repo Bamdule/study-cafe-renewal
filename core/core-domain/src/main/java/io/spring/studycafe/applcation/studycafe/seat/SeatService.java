@@ -6,10 +6,7 @@ import io.spring.studycafe.domain.common.ExceptionCode;
 import io.spring.studycafe.domain.studycafe.customer.Customer;
 import io.spring.studycafe.domain.studycafe.customer.CustomerNotFoundException;
 import io.spring.studycafe.domain.studycafe.customer.CustomerRepository;
-import io.spring.studycafe.domain.studycafe.seat.Seat;
-import io.spring.studycafe.domain.studycafe.seat.SeatEmptyException;
-import io.spring.studycafe.domain.studycafe.seat.SeatNotFoundException;
-import io.spring.studycafe.domain.studycafe.seat.SeatRepository;
+import io.spring.studycafe.domain.studycafe.seat.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -37,8 +34,18 @@ public class SeatService {
         Seat seat = seatRepository.findById(seatId)
             .orElseThrow(() -> new SeatNotFoundException(ExceptionCode.SEAT_NOT_FOUND));
 
+        if (seat.isUsing()) {
+            throw new SeatAlreadyInUseException(ExceptionCode.SEAT_ALREADY_IN_USE);
+        }
+
         Customer customer = customerRepository.find(memberId, seat.getStudyCafeId())
             .orElseThrow(() -> new CustomerNotFoundException(ExceptionCode.CUSTOMER_NOT_FOUND));
+
+        seatRepository.findByStudyCafeIdAndCustomerId(seat.getStudyCafeId(), customer.getId())
+            .ifPresent(s -> {
+                throw new SeatOnlyOneUsableException(ExceptionCode.SEAT_ONLY_ONE_USABLE);
+            });
+
 
         seat.use(customer);
 
@@ -48,13 +55,17 @@ public class SeatService {
     }
 
     @Transactional
-    public SeatInfo leaveSeat(Long studyCafeId, Long memberId) {
+    public SeatInfo leaveSeat(Long studyCafeId, Long seatId, Long memberId) {
 
         Customer customer = customerRepository.find(memberId, studyCafeId)
             .orElseThrow(() -> new CustomerNotFoundException(ExceptionCode.CUSTOMER_NOT_FOUND));
 
         Seat seat = seatRepository.findByStudyCafeIdAndCustomerId(studyCafeId, customer.getId())
-            .orElseThrow(() -> new SeatNotFoundException(ExceptionCode.SEAT_NOT_FOUND));
+            .orElseThrow(() -> new SeatNotFoundException(ExceptionCode.SEAT_INVALID));
+
+        if (seat.getId() != seatId) {
+            throw new SeatInvalidException(ExceptionCode.SEAT_INVALID);
+        }
 
         // 빈 좌석이면 예외 발생
         if (seat.isEmpty()) {

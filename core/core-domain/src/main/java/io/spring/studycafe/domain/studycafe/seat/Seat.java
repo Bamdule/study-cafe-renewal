@@ -70,7 +70,7 @@ public class Seat {
     }
 
     public boolean isEmpty() {
-        return this.customer == null && this.state == SeatState.EMPTY && this.seatUsageStartDateTime == null;
+        return this.state == SeatState.EMPTY;
     }
 
     public boolean isUsing() {
