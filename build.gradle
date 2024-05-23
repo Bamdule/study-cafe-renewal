@@ -85,6 +85,19 @@ project(':core:core-domain') {
     }
 }
 
+project(':core:core-batch') {
+    bootJar { enabled = true }
+    jar { enabled = true }
+
+    dependencies {
+        implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+        implementation 'org.springframework.boot:spring-boot-starter-web'
+        implementation project(":core:core-domain")
+        runtimeOnly project(":storage:db-jpa")
+        runtimeOnly project(":external-api")
+    }
+}
+
 project(':core:core-authorization') {
     bootJar { enabled = false }
     jar { enabled = true }
