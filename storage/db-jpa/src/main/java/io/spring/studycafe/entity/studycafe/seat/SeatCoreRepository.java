@@ -5,6 +5,7 @@ import io.spring.studycafe.domain.studycafe.customer.CustomerNotFoundException;
 import io.spring.studycafe.domain.studycafe.seat.Seat;
 import io.spring.studycafe.domain.studycafe.seat.SeatNotFoundException;
 import io.spring.studycafe.domain.studycafe.seat.SeatRepository;
+import io.spring.studycafe.domain.studycafe.seat.SeatState;
 import io.spring.studycafe.entity.studycafe.customer.CustomerEntity;
 import io.spring.studycafe.entity.studycafe.customer.CustomerJpaRepository;
 import org.springframework.stereotype.Repository;
@@ -62,5 +63,11 @@ public class SeatCoreRepository implements SeatRepository {
 
             seatEntity.updateInUse(seat, customerEntity);
         }
+    }
+
+    @Override
+    public List<Seat> findAllInUse() {
+        return seatJpaRepository.findAllByState(SeatState.IN_USE)
+            .stream().map(SeatEntity::toModel).toList();
     }
 }

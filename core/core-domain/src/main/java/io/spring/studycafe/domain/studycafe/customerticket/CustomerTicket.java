@@ -111,4 +111,8 @@ public class CustomerTicket extends BaseModel {
             }
         }
     }
+
+    public void deductAllTime() {
+        this.deductTime(this.timeInfo);
+    }
 }

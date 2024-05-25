@@ -1,4 +1,4 @@
-package io.spring.studycafe.batch;
+package io.spring.studycafe;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

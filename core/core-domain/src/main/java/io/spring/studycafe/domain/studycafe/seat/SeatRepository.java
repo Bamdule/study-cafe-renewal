@@ -12,4 +12,6 @@ public interface SeatRepository {
     Optional<Seat> findByStudyCafeIdAndCustomerId(Long studyCafeId, Long customerId);
 
     void update(Seat seat);
+
+    List<Seat> findAllInUse();
 }
