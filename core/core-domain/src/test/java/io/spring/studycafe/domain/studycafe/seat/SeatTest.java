@@ -4,8 +4,9 @@ import io.spring.studycafe.domain.common.ExceptionCode;
 import io.spring.studycafe.domain.common.TimeInfo;
 import io.spring.studycafe.domain.studycafe.customer.Customer;
 import io.spring.studycafe.domain.studycafe.customer.CustomerNoTicketException;
+import io.spring.studycafe.domain.studycafe.customer.customerticket.CustomerDefaultTicket;
 import io.spring.studycafe.domain.studycafe.customer.customerticket.CustomerTicket;
-import io.spring.studycafe.domain.studycafe.ticket.TicketType;
+import io.spring.studycafe.domain.studycafe.customer.customerticket.CustomerTimeTicket;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -163,13 +164,10 @@ class SeatTest {
 
     private static Customer createCustomer(Long customerId, Long memberId, Long studyCafeId) {
 
-        CustomerTicket customerTicket = new CustomerTicket(
+        CustomerTicket customerTicket = new CustomerTimeTicket(
             customerId,
-            TicketType.TIME,
-            new TimeInfo(1, 1, 1),
             LocalDate.now().plusDays(30),
-            LocalDateTime.now(),
-            LocalDateTime.now()
+            new TimeInfo(1, 1, 1)
         );
 
         return new Customer(
@@ -184,14 +182,7 @@ class SeatTest {
 
     private static Customer createNoTicketCustomer(Long customerId, Long memberId, Long studyCafeId) {
 
-        CustomerTicket customerTicket = new CustomerTicket(
-            customerId,
-            TicketType.NONE,
-            new TimeInfo(0, 0, 0),
-            null,
-            LocalDateTime.now(),
-            LocalDateTime.now()
-        );
+        CustomerTicket customerTicket = CustomerDefaultTicket.initialize();
 
         return new Customer(
             customerId,

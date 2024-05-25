@@ -12,6 +12,6 @@ public interface SeatJpaRepository extends JpaRepository<SeatEntity, Long> {
 
     Optional<SeatEntity> findByStudyCafeIdAndCustomerId(Long studyCafeId, Long customerId);
 
-    @Query("SELECT s FROM SeatEntity s JOIN FETCH s.customer mc WHERE s.state = :state")
+    @Query("SELECT s FROM SeatEntity s JOIN FETCH s.customer c JOIN FETCH s.customer.customerTicket ct WHERE s.state = :state")
     List<SeatEntity> findAllByState(SeatState state);
 }

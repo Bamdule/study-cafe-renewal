@@ -1,8 +1,11 @@
 package io.spring.studycafe.entity.studycafe.customer;
 
 import io.spring.studycafe.domain.studycafe.customer.Customer;
+import io.spring.studycafe.domain.studycafe.customer.customerticket.CustomerDefaultTicket;
+import io.spring.studycafe.domain.studycafe.customer.customerticket.CustomerTicket;
 import io.spring.studycafe.entity.common.BaseModelEntity;
-import io.spring.studycafe.entity.studycafe.customerticket.CustomerTicketEntity;
+import io.spring.studycafe.entity.studycafe.customer.customerticket.CustomerTicketEntity;
+import io.spring.studycafe.entity.studycafe.customer.customerticket.CustomerTicketFactory;
 import jakarta.persistence.*;
 import lombok.Getter;
 
@@ -41,11 +44,15 @@ public class CustomerEntity extends BaseModelEntity {
     }
 
     public Customer to() {
+        CustomerTicket customerTicket =
+            CustomerTicketFactory.create(this.customerTicket)
+                .orElseGet(() -> CustomerDefaultTicket.initialize());
+
         return new Customer(
             this.id,
             this.memberId,
             this.studyCafeId,
-            this.customerTicket == null ? null : this.customerTicket.to(),
+            customerTicket,
             this.getCreatedAt(),
             this.getUpdatedAt()
         );

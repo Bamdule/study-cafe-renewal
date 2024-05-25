@@ -19,7 +19,7 @@ public class CustomerTicketEventListener {
     @Async
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     public void onCustomerTicketUpdateEventHandler(CustomerTicketUpdateEvent event) {
-        customerService.updateTicket(new CustomerTicketUpdateCommand(event.customerId(), event.ticketId()));
+        customerService.updateCustomerTicket(new CustomerTicketUpdateCommand(event.customerId(), event.ticketId()));
     }
 
     @Async

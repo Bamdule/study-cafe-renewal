@@ -5,6 +5,7 @@ import io.spring.studycafe.domain.studycafe.customer.Customer;
 import io.spring.studycafe.domain.studycafe.customer.CustomerFindQuery;
 import io.spring.studycafe.domain.studycafe.customer.CustomerRepository;
 import io.spring.studycafe.domain.studycafe.customer.customerticket.CustomerTicket;
+import io.spring.studycafe.domain.studycafe.customer.customerticket.CustomerTimeTicket;
 import io.spring.studycafe.domain.studycafe.ticket.Ticket;
 import io.spring.studycafe.domain.studycafe.ticket.TicketType;
 import org.assertj.core.api.Assertions;
@@ -33,7 +34,7 @@ public class CustomerServiceTest {
 
         Assertions.assertThat(customer).isNotNull();
         Assertions.assertThat(customerTicket.getCustomerId()).isNotNull();
-        Assertions.assertThat(customerTicket.isExpired()).isTrue();
+        Assertions.assertThat(customerTicket.isTicketExpired()).isTrue();
         Assertions.assertThat(customerTicket.getTicketType()).isEqualTo(customerTicket.DEFAULT_TICKET_TYPE);
         Assertions.assertThat(customerTicket.getTimeInfo()).isEqualTo(customerTicket.DEFAULT_TIME_INFO);
         Assertions.assertThat(customerTicket.getExpirationDate()).isEqualTo(customerTicket.DEFAULT_EXPIRATION_DATE);
@@ -47,7 +48,7 @@ public class CustomerServiceTest {
 
         Ticket ticket = new Ticket("시간권", TicketType.TIME, new TimeInfo(30, 0, 0), 100000L, 30, 1L);
 
-        savedCustomer.updateTicket(ticket);
+        savedCustomer.updateCustomerTicket(CustomerTimeTicket.create(customer.getId(), ticket));
 
         customerRepository.update(savedCustomer);
 

@@ -11,6 +11,7 @@ import io.spring.studycafe.domain.studycafe.customer.Customer;
 import io.spring.studycafe.domain.studycafe.customer.CustomerFindQuery;
 import io.spring.studycafe.domain.studycafe.customer.CustomerRepository;
 import io.spring.studycafe.domain.studycafe.customer.customerticket.CustomerTicket;
+import io.spring.studycafe.domain.studycafe.customer.customerticket.CustomerTimeTicket;
 import io.spring.studycafe.domain.studycafe.ticket.Ticket;
 import io.spring.studycafe.domain.studycafe.ticket.TicketRepository;
 import io.spring.studycafe.domain.studycafe.ticket.TicketType;
@@ -47,11 +48,10 @@ public class CustomerTicketServiceTest {
 
         Customer customer = customerRepository.save(createCustomer(member, studyCafe));
 
-
         Ticket ticket1 = ticketRepository.save(createTicket(studyCafe, "시간형 티켓", TicketType.TIME, 130000L, new TimeInfo(30, 0, 0), 30));
         Ticket ticket2 = ticketRepository.save(createTicket(studyCafe, "기간형 티켓", TicketType.PERIOD, 150000L, null, 30));
 
-        customer.updateTicket(ticket1);
+        customer.updateCustomerTicket(CustomerTimeTicket.create(customer.getId(), ticket1));
         customerRepository.update(customer);
 
         CustomerTicket customerTicket = customer.getCustomerTicket();
@@ -61,7 +61,7 @@ public class CustomerTicketServiceTest {
         TimeInfo elapsedTimeInfo = TimeInfoCalculator.createElapsedTimeInfo(LocalDateTime.now().minusHours(5).minusMinutes(21), LocalDateTime.now());
 
         customer.getCustomerTicket()
-            .deductTime(elapsedTimeInfo);
+            .useTicket(elapsedTimeInfo);
 
         customerRepository.update(customer);
 

@@ -29,6 +29,4 @@ public class SeatScheduler {
     public void seat() {
         seatExpirationValidationBatch.batch(LocalDateTime.now());
     }
-
-
 }

@@ -44,7 +44,7 @@ public class TimeInfoCalculator {
             throw new IllegalArgumentException("time1와 time2는 필수 값입니다.");
         }
 
-        long totalMinutes = time1.getTotalMinutes() + time1.getTotalMinutes();
+        long totalMinutes = time1.getTotalMinutes() + time2.getTotalMinutes();
 
         return TimeInfo.createInMinutes(totalMinutes);
     }

@@ -1,4 +1,4 @@
-package io.spring.studycafe.entity.studycafe.customerticket;
+package io.spring.studycafe.entity.studycafe.customer.customerticket;
 
 import io.spring.studycafe.domain.common.TimeInfo;
 import io.spring.studycafe.domain.studycafe.customer.customerticket.CustomerTicket;
@@ -44,24 +44,9 @@ public class CustomerTicketEntity extends BaseModelEntity {
         this.expirationDate = customerTicket.getExpirationDate();
     }
 
-    public void updateTimeInfo(TimeInfo timeInfo) {
-        this.timeInfo = timeInfo;
-    }
-
     public void updateTicket(CustomerTicket customerTicket) {
         this.ticketType = customerTicket.getTicketType();
         this.timeInfo = customerTicket.getTimeInfo();
         this.expirationDate = customerTicket.getExpirationDate();
-    }
-
-    public CustomerTicket to() {
-        return new CustomerTicket(
-            customer.getId(),
-            ticketType,
-            timeInfo,
-            expirationDate,
-            getCreatedAt(),
-            getUpdatedAt()
-        );
     }
 }

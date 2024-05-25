@@ -1,6 +1,8 @@
 package io.spring.studycafe.domain.studycafe.customer;
 
 import io.spring.studycafe.domain.common.BaseModel;
+import io.spring.studycafe.domain.common.TimeInfo;
+import io.spring.studycafe.domain.studycafe.customer.customerticket.CustomerDefaultTicket;
 import io.spring.studycafe.domain.studycafe.customer.customerticket.CustomerTicket;
 import io.spring.studycafe.domain.studycafe.ticket.Ticket;
 import io.spring.studycafe.domain.studycafe.ticket.TicketType;
@@ -18,7 +20,7 @@ public class Customer extends BaseModel {
     public Customer(Long memberId, Long studyCafeId) {
         this.memberId = memberId;
         this.studyCafeId = studyCafeId;
-        this.customerTicket = CustomerTicket.initialize();
+        this.customerTicket = CustomerDefaultTicket.initialize();
     }
 
     public Customer(Long id, Long memberId, Long studyCafeId, CustomerTicket customerTicket, LocalDateTime createdAt, LocalDateTime updatedAt) {
@@ -29,8 +31,16 @@ public class Customer extends BaseModel {
         this.customerTicket = customerTicket;
     }
 
+    public void useTicket(TimeInfo usageTime) {
+        customerTicket.useTicket(usageTime);
+    }
+
+    public void updateCustomerTicket(CustomerTicket customerTicket) {
+        this.customerTicket = customerTicket;
+    }
+
     public void updateTicket(Ticket ticket) {
-        customerTicket.updateTicket(ticket);
+        this.customerTicket.updateTicket(ticket);
     }
 
     public boolean hasTicket() {
@@ -38,7 +48,7 @@ public class Customer extends BaseModel {
     }
 
     public boolean hasNotTicket() {
-        return customerTicket == null || customerTicket.isExpired();
+        return customerTicket.isTicketExpired();
     }
 
     public TicketType getTicketType() {

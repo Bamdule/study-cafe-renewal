@@ -70,7 +70,7 @@ public class CustomerTicketPaymentServiceTest {
         Assertions.assertThat(findCustomer.getMemberId()).isEqualTo(member.getId());
         Assertions.assertThat(findCustomer.getCustomerTicket()).isNotNull();
         Assertions.assertThat(findCustomer.getCustomerTicket().getTicketType()).isEqualTo(ticket1.getType());
-        Assertions.assertThat(findCustomer.getCustomerTicket().isExpired()).isEqualTo(false);
+        Assertions.assertThat(findCustomer.getCustomerTicket().isTicketExpired()).isEqualTo(false);
         Assertions.assertThat(findCustomer.getCustomerTicket().getTimeInfo()).isEqualTo(ticket1.getTimeInfo());
         Assertions.assertThat(findCustomer.getCustomerTicket().getExpirationDate()).isEqualTo(LocalDate.now().plusDays(ticket1.getExpirationDays()));
     }

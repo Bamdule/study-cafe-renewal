@@ -37,4 +37,8 @@ public record TimeInfo(long days, long hours, long minutes) {
     public String toString() {
         return String.format("%2d일 %d시간 %d분", days, hours, minutes);
     }
+
+    public static TimeInfo createEmpty() {
+        return new TimeInfo(0, 0, 0);
+    }
 }
