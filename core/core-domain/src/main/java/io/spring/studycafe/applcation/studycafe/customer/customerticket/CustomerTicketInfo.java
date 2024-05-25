@@ -1,7 +1,7 @@
 package io.spring.studycafe.applcation.studycafe.customer.customerticket;
 
 import io.spring.studycafe.domain.common.TimeInfo;
-import io.spring.studycafe.domain.studycafe.customerticket.CustomerTicket;
+import io.spring.studycafe.domain.studycafe.customer.customerticket.CustomerTicket;
 import io.spring.studycafe.domain.studycafe.ticket.TicketType;
 
 import java.time.LocalDate;

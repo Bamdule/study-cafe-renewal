@@ -3,7 +3,7 @@ package io.spring.studycafe.batch;
 import io.spring.studycafe.domain.common.TimeInfo;
 import io.spring.studycafe.domain.studycafe.customer.Customer;
 import io.spring.studycafe.domain.studycafe.customer.CustomerRepository;
-import io.spring.studycafe.domain.studycafe.customerticket.CustomerTicket;
+import io.spring.studycafe.domain.studycafe.customer.customerticket.CustomerTicket;
 import io.spring.studycafe.domain.studycafe.seat.Seat;
 import io.spring.studycafe.domain.studycafe.seat.SeatRepository;
 import lombok.extern.slf4j.Slf4j;

@@ -1,7 +1,7 @@
 package io.spring.studycafe.entity.studycafe.customerticket;
 
 import io.spring.studycafe.domain.common.TimeInfo;
-import io.spring.studycafe.domain.studycafe.customerticket.CustomerTicket;
+import io.spring.studycafe.domain.studycafe.customer.customerticket.CustomerTicket;
 import io.spring.studycafe.domain.studycafe.ticket.TicketType;
 import io.spring.studycafe.entity.common.BaseModelEntity;
 import io.spring.studycafe.entity.studycafe.customer.CustomerEntity;

@@ -1,4 +1,4 @@
-package io.spring.studycafe.domain.studycafe.customerticket;
+package io.spring.studycafe.domain.studycafe.customer.customerticket;
 
 import io.spring.studycafe.domain.common.BaseModel;
 import io.spring.studycafe.domain.common.TimeInfo;
