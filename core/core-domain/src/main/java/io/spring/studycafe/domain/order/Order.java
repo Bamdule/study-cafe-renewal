@@ -20,7 +20,7 @@ public class Order extends BaseModel {
     private String orderCode;
     private List<OrderItem> orderItems;
 
-    public Order(Long id, Long studyCafeId, Long memberId, Long customerId, Long paymentMethodId, String name, Long totalPrice, String orderCode, LocalDateTime createdAt, LocalDateTime updatedAt) {
+    public Order(Long id, Long studyCafeId, Long memberId, Long customerId, Long paymentMethodId, String name, Long totalPrice, String orderCode, List<OrderItem> orderItems, LocalDateTime createdAt, LocalDateTime updatedAt) {
         super(createdAt, updatedAt);
         this.id = id;
         this.studyCafeId = studyCafeId;
@@ -30,9 +30,10 @@ public class Order extends BaseModel {
         this.name = name;
         this.totalPrice = totalPrice;
         this.orderCode = orderCode;
+        this.orderItems = orderItems;
     }
 
-    public Order(Customer customer, Long paymentMethodId, String name, Long totalPrice, String orderCode) {
-        this(null, customer.getStudyCafeId(), customer.getMemberId(), customer.getId(), paymentMethodId, name, totalPrice, orderCode, null, null);
+    public Order(Customer customer, Long paymentMethodId, String name, Long totalPrice, String orderCode, List<OrderItem> orderItems) {
+        this(null, customer.getStudyCafeId(), customer.getMemberId(), customer.getId(), paymentMethodId, name, totalPrice, orderCode, orderItems, null, null);
     }
 }

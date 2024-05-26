@@ -1,9 +1,14 @@
 package io.spring.studycafe.entity.studycafe.order;
 
 import io.spring.studycafe.domain.order.Order;
+import io.spring.studycafe.domain.order.orderitem.OrderItem;
 import io.spring.studycafe.entity.common.BaseModelEntity;
 import jakarta.persistence.*;
+import lombok.Getter;
 
+import java.util.List;
+
+@Getter
 @Table(name = "orders")
 @Entity
 public class OrderEntity extends BaseModelEntity {
@@ -30,10 +35,13 @@ public class OrderEntity extends BaseModelEntity {
     @Column(name = "order_code", nullable = false, unique = true)
     private String orderCode;
 
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
+    private List<OrderItemEntity> orderItems;
+
     protected OrderEntity() {
     }
 
-    public OrderEntity(Long studyCafeId, Long memberId, Long customerId, Long paymentMethodId, String name, Long totalPrice, String orderCode) {
+    public OrderEntity(Long studyCafeId, Long memberId, Long customerId, Long paymentMethodId, String name, Long totalPrice, String orderCode, List<OrderItem> orderItems) {
         this.studyCafeId = studyCafeId;
         this.memberId = memberId;
         this.customerId = customerId;
@@ -41,6 +49,11 @@ public class OrderEntity extends BaseModelEntity {
         this.name = name;
         this.totalPrice = totalPrice;
         this.orderCode = orderCode;
+        this.orderItems = createOrderItemEntity(orderItems);
+    }
+
+    private List<OrderItemEntity> createOrderItemEntity(List<OrderItem> orderItems) {
+        return orderItems.stream().map(orderItem -> new OrderItemEntity(this, orderItem)).toList();
     }
 
     public static OrderEntity create(Order order) {
@@ -51,7 +64,8 @@ public class OrderEntity extends BaseModelEntity {
             order.getPaymentMethodId(),
             order.getName(),
             order.getTotalPrice(),
-            order.getOrderCode()
+            order.getOrderCode(),
+            order.getOrderItems()
         );
     }
 
@@ -65,6 +79,7 @@ public class OrderEntity extends BaseModelEntity {
             this.name,
             this.totalPrice,
             this.orderCode,
+            OrderItemEntity.convert(this.orderItems),
             this.getCreatedAt(),
             this.getUpdatedAt()
         );

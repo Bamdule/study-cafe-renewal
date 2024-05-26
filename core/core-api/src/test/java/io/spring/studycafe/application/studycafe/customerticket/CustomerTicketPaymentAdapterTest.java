@@ -1,6 +1,6 @@
 package io.spring.studycafe.application.studycafe.customerticket;
 
-import io.spring.studycafe.applcation.payment.CustomerTicketPaymentService;
+import io.spring.studycafe.applcation.payment.ticket.TicketPaymentService;
 import io.spring.studycafe.applcation.payment.PaymentInfo;
 import io.spring.studycafe.applcation.paymentmethod.card.CardInfo;
 import io.spring.studycafe.applcation.paymentmethod.card.CardRegisterCommand;
@@ -44,7 +44,7 @@ public class CustomerTicketPaymentAdapterTest {
     private TicketRepository ticketRepository;
 
     @Autowired
-    private CustomerTicketPaymentService customerTicketPaymentService;
+    private TicketPaymentService ticketPaymentService;
 
     @Autowired
     private CardRegisterService cardRegisterService;
@@ -60,7 +60,7 @@ public class CustomerTicketPaymentAdapterTest {
 
         CustomerTicketPaymentCommand command = new CustomerTicketPaymentCommand(studyCafe.getId(), member.getId(), ticket1.getId(), PaymentMethodType.CARD, cardInfo.id());
 
-        PaymentInfo paymentInfo = customerTicketPaymentService.purchase(command);
+        PaymentInfo paymentInfo = ticketPaymentService.purchase(command);
 
         System.out.println(paymentInfo);
 

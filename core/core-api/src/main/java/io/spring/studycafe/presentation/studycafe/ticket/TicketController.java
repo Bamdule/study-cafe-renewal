@@ -1,9 +1,8 @@
 package io.spring.studycafe.presentation.studycafe.ticket;
 
 import io.spring.studycafe.applcation.payment.PaymentInfo;
-import io.spring.studycafe.applcation.payment.adapter.PaymentResult;
 import io.spring.studycafe.applcation.studycafe.customer.customerticket.CustomerTicketPaymentCommand;
-import io.spring.studycafe.applcation.payment.CustomerTicketPaymentService;
+import io.spring.studycafe.applcation.payment.ticket.TicketPaymentService;
 import io.spring.studycafe.applcation.studycafe.ticket.TicketService;
 import io.spring.studycafe.config.authorization.Authorization;
 import io.spring.studycafe.config.authorization.AuthorizationInfo;
@@ -21,11 +20,11 @@ import java.util.List;
 @RestController
 public class TicketController {
     private final TicketService ticketService;
-    private final CustomerTicketPaymentService customerTicketPaymentService;
+    private final TicketPaymentService ticketPaymentService;
 
-    public TicketController(TicketService ticketService, CustomerTicketPaymentService customerTicketPaymentService) {
+    public TicketController(TicketService ticketService, TicketPaymentService ticketPaymentService) {
         this.ticketService = ticketService;
-        this.customerTicketPaymentService = customerTicketPaymentService;
+        this.ticketPaymentService = ticketPaymentService;
     }
 
     @Operation(summary = "스터디 카페 이용권 조회", description = "스터디 카페 이용권을 조회한다")
@@ -53,7 +52,7 @@ public class TicketController {
         @Parameter(hidden = true) @Authorization AuthorizationInfo authorizationInfo,
         @PathVariable(value = "ticketId") Long ticketId,
         @RequestBody @Valid TicketPaymentRequest request) {
-        PaymentInfo paymentInfo = customerTicketPaymentService.purchase(
+        PaymentInfo paymentInfo = ticketPaymentService.purchase(
             new CustomerTicketPaymentCommand(
                 request.studyCafeId(),
                 authorizationInfo.id(),
