@@ -1,4 +1,6 @@
-package io.spring.studycafe.applcation.payment;
+package io.spring.studycafe.applcation.payment.adapter;
+
+import io.spring.studycafe.domain.payment.PaymentResultType;
 
 public record PaymentResult(
     Long paymentId,
@@ -6,7 +8,7 @@ public record PaymentResult(
     Long itemPrice,
     String message,
     String resultCode,
-    String resultType,
+    PaymentResultType resultType,
     boolean success
 ) {
 }

@@ -1,7 +1,7 @@
 package io.spring.studycafe.payment.card;
 
-import io.spring.studycafe.applcation.payment.card.adapter.CardPaymentApiResultType;
+import io.spring.studycafe.domain.payment.PaymentResultType;
 
 public interface CardPaymentApiResultCodeConverter {
-    CardPaymentApiResultType convert(String resultCode);
+    PaymentResultType convert(String resultCode);
 }

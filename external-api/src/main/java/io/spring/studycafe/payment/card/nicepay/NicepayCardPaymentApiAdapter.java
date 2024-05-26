@@ -1,8 +1,8 @@
 package io.spring.studycafe.payment.card.nicepay;
 
-import io.spring.studycafe.applcation.payment.card.adapter.CardPaymentApiAdapter;
-import io.spring.studycafe.applcation.payment.card.adapter.CardPaymentRequest;
-import io.spring.studycafe.applcation.payment.card.adapter.CardPaymentResponse;
+import io.spring.studycafe.applcation.payment.adapter.card.adapter.CardPaymentApiAdapter;
+import io.spring.studycafe.applcation.payment.adapter.card.adapter.CardPaymentRequest;
+import io.spring.studycafe.applcation.payment.adapter.card.adapter.CardPaymentResponse;
 import io.spring.studycafe.domain.paymentmethod.card.CardPaymentAgency;
 import io.spring.studycafe.paymentmethod.card.nicepay.NicePayProperties;
 import lombok.extern.slf4j.Slf4j;

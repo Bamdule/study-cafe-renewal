@@ -1,6 +1,7 @@
 package io.spring.studycafe.presentation.studycafe.ticket;
 
-import io.spring.studycafe.applcation.payment.PaymentResult;
+import io.spring.studycafe.applcation.payment.PaymentInfo;
+import io.spring.studycafe.domain.payment.PaymentResultType;
 
 public record TicketPaymentResponse(
     Long paymentId,
@@ -10,18 +11,16 @@ public record TicketPaymentResponse(
 
     String message,
     String resultCode,
-    String resultType,
-    boolean success
+    PaymentResultType resultType
 ) {
-    public static TicketPaymentResponse of(PaymentResult paymentResult) {
+    public static TicketPaymentResponse of(PaymentInfo paymentInfo) {
         return new TicketPaymentResponse(
-            paymentResult.paymentId(),
-            paymentResult.itemName(),
-            paymentResult.itemPrice(),
-            paymentResult.message(),
-            paymentResult.resultCode(),
-            paymentResult.resultType(),
-            paymentResult.success()
+            paymentInfo.id(),
+            paymentInfo.name(),
+            paymentInfo.totalPrice(),
+            paymentInfo.message(),
+            paymentInfo.resultCode(),
+            paymentInfo.resultType()
         );
 
     }

@@ -1,4 +1,4 @@
-package io.spring.studycafe.applcation.payment.card.adapter;
+package io.spring.studycafe.applcation.payment.adapter.card.adapter;
 
 import io.spring.studycafe.domain.common.ExceptionCode;
 import io.spring.studycafe.domain.common.exception.DomainException;

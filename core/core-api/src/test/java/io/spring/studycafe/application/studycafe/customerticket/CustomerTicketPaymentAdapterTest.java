@@ -1,11 +1,11 @@
 package io.spring.studycafe.application.studycafe.customerticket;
 
-import io.spring.studycafe.applcation.payment.PaymentResult;
+import io.spring.studycafe.applcation.payment.CustomerTicketPaymentService;
+import io.spring.studycafe.applcation.payment.PaymentInfo;
 import io.spring.studycafe.applcation.paymentmethod.card.CardInfo;
 import io.spring.studycafe.applcation.paymentmethod.card.CardRegisterCommand;
 import io.spring.studycafe.applcation.paymentmethod.card.CardRegisterService;
 import io.spring.studycafe.applcation.studycafe.customer.customerticket.CustomerTicketPaymentCommand;
-import io.spring.studycafe.applcation.studycafe.customer.customerticket.CustomerTicketPaymentService;
 import io.spring.studycafe.domain.common.TimeInfo;
 import io.spring.studycafe.domain.member.Member;
 import io.spring.studycafe.domain.member.MemberRepository;
@@ -30,7 +30,7 @@ import java.time.LocalDate;
 
 @ActiveProfiles("test")
 @SpringBootTest
-public class CustomerTicketPaymentServiceTest {
+public class CustomerTicketPaymentAdapterTest {
     @Autowired
     private MemberRepository memberRepository;
 
@@ -60,9 +60,9 @@ public class CustomerTicketPaymentServiceTest {
 
         CustomerTicketPaymentCommand command = new CustomerTicketPaymentCommand(studyCafe.getId(), member.getId(), ticket1.getId(), PaymentMethodType.CARD, cardInfo.id());
 
-        PaymentResult result = customerTicketPaymentService.purchase(command);
+        PaymentInfo paymentInfo = customerTicketPaymentService.purchase(command);
 
-        System.out.println(result);
+        System.out.println(paymentInfo);
 
         Customer findCustomer = customerRepository.find(new CustomerFindQuery(studyCafe.getId(), member.getId())).get();
 

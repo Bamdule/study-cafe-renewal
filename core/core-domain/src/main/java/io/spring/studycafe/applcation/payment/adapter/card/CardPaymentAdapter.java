@@ -1,11 +1,11 @@
-package io.spring.studycafe.applcation.payment.card;
+package io.spring.studycafe.applcation.payment.adapter.card;
 
-import io.spring.studycafe.applcation.payment.PaymentResult;
-import io.spring.studycafe.applcation.payment.PaymentService;
-import io.spring.studycafe.applcation.payment.card.adapter.CardPaymentApiAdapterNotFoundException;
-import io.spring.studycafe.applcation.payment.card.adapter.CardPaymentApiRouter;
-import io.spring.studycafe.applcation.payment.card.adapter.CardPaymentRequest;
-import io.spring.studycafe.applcation.payment.card.adapter.CardPaymentResponse;
+import io.spring.studycafe.applcation.payment.adapter.PaymentResult;
+import io.spring.studycafe.applcation.payment.adapter.PaymentAdapter;
+import io.spring.studycafe.applcation.payment.adapter.card.adapter.CardPaymentApiAdapterNotFoundException;
+import io.spring.studycafe.applcation.payment.adapter.card.adapter.CardPaymentApiRouter;
+import io.spring.studycafe.applcation.payment.adapter.card.adapter.CardPaymentRequest;
+import io.spring.studycafe.applcation.payment.adapter.card.adapter.CardPaymentResponse;
 import io.spring.studycafe.domain.common.ExceptionCode;
 import io.spring.studycafe.domain.order.Order;
 import io.spring.studycafe.domain.paymentmethod.PaymentMethodType;
@@ -15,11 +15,11 @@ import io.spring.studycafe.domain.paymentmethod.card.exception.CardPaymentMethod
 import org.springframework.stereotype.Service;
 
 @Service
-public class CardPaymentService implements PaymentService {
+public class CardPaymentAdapter implements PaymentAdapter {
     private final CardPaymentMethodRepository cardPaymentMethodRepository;
     private final CardPaymentApiRouter cardPaymentApiRouter;
 
-    public CardPaymentService(CardPaymentMethodRepository cardPaymentMethodRepository, CardPaymentApiRouter cardPaymentApiRouter) {
+    public CardPaymentAdapter(CardPaymentMethodRepository cardPaymentMethodRepository, CardPaymentApiRouter cardPaymentApiRouter) {
         this.cardPaymentMethodRepository = cardPaymentMethodRepository;
         this.cardPaymentApiRouter = cardPaymentApiRouter;
     }
@@ -33,7 +33,7 @@ public class CardPaymentService implements PaymentService {
             throw new CardPaymentMethodNotFoundException(ExceptionCode.CARD_PAYMENT_METHOD_NOT_FOUND);
         }
 
-        CardPaymentRequest cardPaymentRequest = new CardPaymentRequest(order.getOrderCode(), order.getItemName(), order.getItemPrice(), card.getCardSecretKey());
+        CardPaymentRequest cardPaymentRequest = new CardPaymentRequest(order.getOrderCode(), order.getName(), order.getTotalPrice(), card.getCardSecretKey());
 
         CardPaymentResponse cardPaymentResponse =
             cardPaymentApiRouter.route(card.getCardPaymentAgency())
@@ -44,11 +44,11 @@ public class CardPaymentService implements PaymentService {
 
         PaymentResult result = new PaymentResult(
             1L,
-            order.getItemName(),
-            order.getItemPrice(),
+            order.getName(),
+            order.getTotalPrice(),
             cardPaymentResponse.message(),
             cardPaymentResponse.resultCode(),
-            cardPaymentResponse.resultType().name(),
+            cardPaymentResponse.resultType(),
             cardPaymentResponse.success()
         );
 

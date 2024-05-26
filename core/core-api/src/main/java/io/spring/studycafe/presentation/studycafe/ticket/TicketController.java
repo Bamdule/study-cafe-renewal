@@ -1,8 +1,9 @@
 package io.spring.studycafe.presentation.studycafe.ticket;
 
-import io.spring.studycafe.applcation.payment.PaymentResult;
+import io.spring.studycafe.applcation.payment.PaymentInfo;
+import io.spring.studycafe.applcation.payment.adapter.PaymentResult;
 import io.spring.studycafe.applcation.studycafe.customer.customerticket.CustomerTicketPaymentCommand;
-import io.spring.studycafe.applcation.studycafe.customer.customerticket.CustomerTicketPaymentService;
+import io.spring.studycafe.applcation.payment.CustomerTicketPaymentService;
 import io.spring.studycafe.applcation.studycafe.ticket.TicketService;
 import io.spring.studycafe.config.authorization.Authorization;
 import io.spring.studycafe.config.authorization.AuthorizationInfo;
@@ -14,8 +15,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
-import static io.swagger.v3.oas.annotations.enums.ParameterIn.PATH;
 
 @Tag(name = "스터디카페 이용권")
 @RequestMapping("/api/v1/study-cafe-tickets")
@@ -54,7 +53,7 @@ public class TicketController {
         @Parameter(hidden = true) @Authorization AuthorizationInfo authorizationInfo,
         @PathVariable(value = "ticketId") Long ticketId,
         @RequestBody @Valid TicketPaymentRequest request) {
-        PaymentResult result = customerTicketPaymentService.purchase(
+        PaymentInfo paymentInfo = customerTicketPaymentService.purchase(
             new CustomerTicketPaymentCommand(
                 request.studyCafeId(),
                 authorizationInfo.id(),
@@ -64,6 +63,6 @@ public class TicketController {
             )
         );
 
-        return ResponseEntity.ok(TicketPaymentResponse.of(result));
+        return ResponseEntity.ok(TicketPaymentResponse.of(paymentInfo));
     }
 }
