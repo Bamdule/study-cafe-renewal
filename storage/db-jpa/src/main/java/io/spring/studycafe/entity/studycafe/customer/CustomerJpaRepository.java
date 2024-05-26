@@ -10,6 +10,7 @@ import java.util.Optional;
 
 public interface CustomerJpaRepository extends JpaRepository<CustomerEntity, Long> {
 
+    @Query("SELECT c FROM CustomerEntity c JOIN FETCH c.customerTicket ct WHERE c.memberId = :memberId and c.studyCafeId = :studyCafeId")
     Optional<CustomerEntity> findByMemberIdAndAndStudyCafeId(Long memberId, Long studyCafeId);
 
     @Lock(LockModeType.PESSIMISTIC_WRITE)

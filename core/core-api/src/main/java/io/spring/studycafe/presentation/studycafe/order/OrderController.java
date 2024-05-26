@@ -5,6 +5,7 @@ import io.spring.studycafe.applcation.order.OrderService;
 import io.spring.studycafe.config.authorization.Authorization;
 import io.spring.studycafe.config.authorization.AuthorizationInfo;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+@Tag(name = "고객 주문")
 @RequestMapping(value = "/api/v1/study-cafe-orders")
 @RestController
 public class OrderController {

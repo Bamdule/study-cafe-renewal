@@ -45,7 +45,7 @@ public class TicketPaymentService {
 
     @Transactional
     public PaymentInfo purchase(CustomerTicketPaymentCommand command) {
-        validate(command);
+
 
         Customer customer = customerRepository.find(new CustomerFindQuery(command.studyCafeId(), command.memberId()))
             .orElseThrow(() -> new CustomerNotFoundException(ExceptionCode.CUSTOMER_NOT_FOUND));
@@ -72,19 +72,5 @@ public class TicketPaymentService {
         }
 
         return PaymentInfo.create(payment);
-    }
-
-    private void validate(CustomerTicketPaymentCommand command) {
-        Customer customer = customerRepository.find(new CustomerFindQuery(command.studyCafeId(), command.memberId()))
-            .orElseThrow(() -> new CustomerNotFoundException(ExceptionCode.CUSTOMER_NOT_FOUND));
-        Ticket ticket = ticketRepository.findById(command.ticketId())
-            .orElseThrow(() -> new TicketNotFoundException(ExceptionCode.TICKET_NOT_FOUND));
-
-        if (customer.getStudyCafeId() == command.studyCafeId() && customer.getMemberId() == command.memberId() &&
-            ticket.getStudyCafeId() == command.studyCafeId()) {
-            return;
-        }
-
-        throw new CustomerNotFoundException(ExceptionCode.CUSTOMER_NOT_FOUND);
     }
 }
