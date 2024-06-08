@@ -59,7 +59,7 @@ class SeatTest {
             null
         );
 
-        seat.use(customer);
+        seat.assignTo(customer);
 
         assertThat(seat.getId()).isNotNull();
         assertThat(seat.getCustomer()).isNotNull();
@@ -88,8 +88,8 @@ class SeatTest {
             null
         );
 
-        seat.use(customer);
-        Assertions.assertThatThrownBy(() -> seat.use(customer2))
+        seat.assignTo(customer);
+        Assertions.assertThatThrownBy(() -> seat.assignTo(customer2))
             .isInstanceOf(SeatAlreadyInUseException.class)
             .hasMessage(ExceptionCode.SEAT_ALREADY_IN_USE.getMessage());
     }
@@ -110,7 +110,7 @@ class SeatTest {
             null
         );
 
-        Assertions.assertThatThrownBy(() -> seat.use(customer))
+        Assertions.assertThatThrownBy(() -> seat.assignTo(customer))
             .isInstanceOf(CustomerNoTicketException.class)
             .hasMessage(ExceptionCode.CUSTOMER_NO_TICKET.getMessage());
     }
@@ -131,7 +131,7 @@ class SeatTest {
             null
         );
 
-        seat.use(customer);
+        seat.assignTo(customer);
         TimeInfo usedTimeInfo = seat.getUsedTimeInfo();
 
         seat.leave();

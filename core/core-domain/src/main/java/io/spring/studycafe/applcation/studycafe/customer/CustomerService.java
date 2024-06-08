@@ -3,11 +3,11 @@ package io.spring.studycafe.applcation.studycafe.customer;
 import io.spring.studycafe.domain.common.ExceptionCode;
 import io.spring.studycafe.domain.studycafe.customer.*;
 import io.spring.studycafe.domain.studycafe.customer.customerticket.CustomerPeriodTicket;
+import io.spring.studycafe.domain.studycafe.customer.customerticket.CustomerTicket;
 import io.spring.studycafe.domain.studycafe.customer.customerticket.CustomerTimeTicket;
 import io.spring.studycafe.domain.studycafe.ticket.Ticket;
 import io.spring.studycafe.domain.studycafe.ticket.TicketNotFoundException;
 import io.spring.studycafe.domain.studycafe.ticket.TicketRepository;
-import io.spring.studycafe.domain.studycafe.ticket.TicketType;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -35,27 +35,30 @@ public class CustomerService {
             .orElseThrow(() -> new TicketNotFoundException(ExceptionCode.TICKET_NOT_FOUND));
 
         if (isChangedTicket(customer, ticket)) {
-            if (ticket.getType() == TicketType.PERIOD) {
-                customer.updateCustomerTicket(
-                    new CustomerPeriodTicket(
-                        customer.getId(),
-                        LocalDate.now().plusDays(ticket.getExpirationDays()),
-                        ticket.getTimeInfo()
-                    ));
-            } else if (ticket.getType() == TicketType.TIME) {
-                customer.updateCustomerTicket(new CustomerTimeTicket(
-                    customer.getId(),
-                    LocalDate.now().plusDays(ticket.getExpirationDays()),
-                    ticket.getTimeInfo()
-                ));
-            } else {
-                throw new IllegalArgumentException("잘못된 티켓 정보 입니다.");
-            }
+            customer.updateCustomerTicket(createCustomerTicket(ticket, customer));
         } else {
             customer.updateTicket(ticket);
         }
 
         customerRepository.update(customer);
+    }
+
+    private CustomerTicket createCustomerTicket(Ticket ticket, Customer customer) {
+        switch (ticket.getType()) {
+            case PERIOD:
+                return new CustomerPeriodTicket(
+                    customer.getId(),
+                    LocalDate.now().plusDays(ticket.getExpirationDays()),
+                    ticket.getTimeInfo()
+                );
+            case TIME:
+                return new CustomerTimeTicket(
+                    customer.getId(),
+                    LocalDate.now().plusDays(ticket.getExpirationDays()),
+                    ticket.getTimeInfo()
+                );
+        }
+        throw new IllegalArgumentException("잘못된 티켓 정보 입니다.");
     }
 
     private boolean isChangedTicket(Customer customer, Ticket ticket) {
@@ -67,9 +70,7 @@ public class CustomerService {
         Customer customer = customerRepository.findWithPessimisticLockingById(command.customerId())
             .orElseThrow(() -> new CustomerNotFoundException(ExceptionCode.CUSTOMER_NOT_FOUND));
 
-        customer
-            .getCustomerTicket()
-            .useTicket(command.timeInfo());
+        customer.useTicket(command.timeInfo());
 
         log.info("customerId={}, deductionTime={}, remainingTimeInfo={}, customerTicketType={}",
             customer.getId(),

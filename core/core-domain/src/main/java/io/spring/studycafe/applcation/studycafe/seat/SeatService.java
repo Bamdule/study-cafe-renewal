@@ -37,25 +37,16 @@ public class SeatService {
         Seat seat = seatRepository.findById(seatId)
             .orElseThrow(() -> new SeatNotFoundException(ExceptionCode.SEAT_NOT_FOUND));
 
-        // 좌석 사용중 여부 체크
-        if (seat.isUsing()) {
-            throw new SeatAlreadyInUseException(ExceptionCode.SEAT_ALREADY_IN_USE);
-        }
-
         // 고객 정보 조회
         Customer customer = customerRepository.find(new CustomerFindQuery(seat.getStudyCafeId(), memberId))
             .orElseThrow(() -> new CustomerNotFoundException(ExceptionCode.CUSTOMER_NOT_FOUND));
 
         // 다른 좌석을 사용하고 있는지 체크
-        seatRepository.findByStudyCafeIdAndCustomerId(seat.getStudyCafeId(), customer.getId())
-            .ifPresent(s -> {
-                throw new SeatOnlyOneUsableException(ExceptionCode.SEAT_ONLY_ONE_USABLE);
-            });
+        validateOtherSeatAssigned(customer);
 
+        seat.assignTo(customer);
 
-        seat.use(customer);
         seatRepository.update(seat);
-
         return SeatInfo.of(seat);
     }
 
@@ -88,6 +79,13 @@ public class SeatService {
         seatRepository.update(seat);
 
         return SeatInfo.of(seat);
+    }
+
+    private void validateOtherSeatAssigned(Customer customer) {
+        seatRepository.findByStudyCafeIdAndCustomerId(customer.getStudyCafeId(), customer.getId())
+            .ifPresent(s -> {
+                throw new SeatOnlyOneUsableException(ExceptionCode.SEAT_ONLY_ONE_USABLE);
+            });
     }
 
 

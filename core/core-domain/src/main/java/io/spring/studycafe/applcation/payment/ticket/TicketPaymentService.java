@@ -32,20 +32,19 @@ public class TicketPaymentService {
     private final TicketRepository ticketRepository;
     private final PaymentService paymentService;
     private final EventPublisher eventPublisher;
-    private final OrderItemFactory<Ticket> ticketOrderItemFactory;
+    private final OrderItemFactory<Ticket> orderItemFactory;
 
-    public TicketPaymentService(OrderService orderService, CustomerRepository customerRepository, TicketRepository ticketRepository, PaymentService paymentService, EventPublisher eventPublisher, OrderItemFactory<Ticket> ticketOrderItemFactory) {
+    public TicketPaymentService(OrderService orderService, CustomerRepository customerRepository, TicketRepository ticketRepository, PaymentService paymentService, EventPublisher eventPublisher, OrderItemFactory<Ticket> orderItemFactory) {
         this.orderService = orderService;
         this.customerRepository = customerRepository;
         this.ticketRepository = ticketRepository;
         this.paymentService = paymentService;
         this.eventPublisher = eventPublisher;
-        this.ticketOrderItemFactory = ticketOrderItemFactory;
+        this.orderItemFactory = orderItemFactory;
     }
 
     @Transactional
     public PaymentInfo purchase(CustomerTicketPaymentCommand command) {
-
 
         Customer customer = customerRepository.find(new CustomerFindQuery(command.studyCafeId(), command.memberId()))
             .orElseThrow(() -> new CustomerNotFoundException(ExceptionCode.CUSTOMER_NOT_FOUND));
@@ -53,7 +52,7 @@ public class TicketPaymentService {
         Ticket ticket = ticketRepository.findById(command.ticketId())
             .orElseThrow(() -> new TicketNotFoundException(ExceptionCode.TICKET_NOT_FOUND));
 
-        OrderItem orderItem = ticketOrderItemFactory.create(ticket);
+        OrderItem orderItem = orderItemFactory.create(ticket);
 
         // 주문 신청
         Order order = orderService.register(new OrderRegistrationCommand(
