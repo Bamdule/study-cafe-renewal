@@ -66,7 +66,7 @@ public class CustomerService {
     }
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
-    public void deductTicketTime(CustomerTicketTimeDeductionCommand command) {
+    public void useTicket(CustomerTicketUseCommand command) {
         Customer customer = customerRepository.findWithPessimisticLockingById(command.customerId())
             .orElseThrow(() -> new CustomerNotFoundException(ExceptionCode.CUSTOMER_NOT_FOUND));
 

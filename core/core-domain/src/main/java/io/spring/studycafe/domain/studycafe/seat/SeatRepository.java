@@ -9,6 +9,8 @@ public interface SeatRepository {
 
     Optional<Seat> findById(Long id);
 
+    Optional<Seat> findWithPessimisticLockingById(Long id);
+
     Optional<Seat> findByStudyCafeIdAndCustomerId(Long studyCafeId, Long customerId);
 
     void update(Seat seat);

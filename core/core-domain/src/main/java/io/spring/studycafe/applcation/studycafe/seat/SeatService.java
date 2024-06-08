@@ -1,7 +1,7 @@
 package io.spring.studycafe.applcation.studycafe.seat;
 
 import io.spring.studycafe.applcation.event.EventPublisher;
-import io.spring.studycafe.applcation.studycafe.customer.customerticket.event.CustomerTicketTimeDeductionEvent;
+import io.spring.studycafe.applcation.studycafe.customer.customerticket.event.CustomerSeatUseEndEvent;
 import io.spring.studycafe.domain.common.ExceptionCode;
 import io.spring.studycafe.domain.studycafe.customer.Customer;
 import io.spring.studycafe.domain.studycafe.customer.CustomerFindQuery;
@@ -34,7 +34,7 @@ public class SeatService {
     @Transactional
     public SeatInfo useSeat(Long seatId, Long memberId) {
         // 좌석 조회
-        Seat seat = seatRepository.findById(seatId)
+        Seat seat = seatRepository.findWithPessimisticLockingById(seatId)
             .orElseThrow(() -> new SeatNotFoundException(ExceptionCode.SEAT_NOT_FOUND));
 
         // 고객 정보 조회
@@ -53,15 +53,16 @@ public class SeatService {
     @Transactional
     public SeatInfo leaveSeat(Long studyCafeId, Long seatId, Long memberId) {
 
+        // 내 좌석 정보 조회
+        Seat seat = seatRepository.findWithPessimisticLockingById(seatId)
+            .orElseThrow(() -> new SeatNotFoundException(ExceptionCode.SEAT_INVALID));
+
         // 고객 정보 조회
         Customer customer = customerRepository.find(new CustomerFindQuery(studyCafeId, memberId))
             .orElseThrow(() -> new CustomerNotFoundException(ExceptionCode.CUSTOMER_NOT_FOUND));
 
-        // 내 좌석 정보 조회
-        Seat seat = seatRepository.findByStudyCafeIdAndCustomerId(studyCafeId, customer.getId())
-            .orElseThrow(() -> new SeatNotFoundException(ExceptionCode.SEAT_INVALID));
 
-        if (seat.getId() != seatId) {
+        if (seat.getCustomer().getId() != customer.getId()) {
             throw new SeatInvalidException(ExceptionCode.SEAT_INVALID);
         }
 
@@ -70,10 +71,7 @@ public class SeatService {
             throw new SeatEmptyException(ExceptionCode.SEAT_EMPTY);
         }
 
-        switch (seat.getCustomer().getTicketType()) {
-            case TIME ->
-                eventPublisher.publish(new CustomerTicketTimeDeductionEvent(customer.getId(), seat.getUsedTimeInfo()));
-        }
+        eventPublisher.publish(new CustomerSeatUseEndEvent(customer.getId(), seat.getUsedTimeInfo()));
 
         seat.leave();
         seatRepository.update(seat);

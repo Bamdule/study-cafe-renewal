@@ -38,6 +38,12 @@ public class SeatCoreRepository implements SeatRepository {
     }
 
     @Override
+    public Optional<Seat> findWithPessimisticLockingById(Long id) {
+        return seatJpaRepository.findWithPessimisticLockingById(id)
+            .map(SeatEntity::toModel);
+    }
+
+    @Override
     public Optional<Seat> findByStudyCafeIdAndCustomerId(Long studyCafeId, Long customerId) {
         return seatJpaRepository.findByStudyCafeIdAndCustomerId(studyCafeId, customerId)
             .map(SeatEntity::toModel);

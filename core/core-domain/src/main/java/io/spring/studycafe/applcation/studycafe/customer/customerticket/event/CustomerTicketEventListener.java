@@ -1,7 +1,7 @@
 package io.spring.studycafe.applcation.studycafe.customer.customerticket.event;
 
 import io.spring.studycafe.applcation.studycafe.customer.CustomerService;
-import io.spring.studycafe.applcation.studycafe.customer.CustomerTicketTimeDeductionCommand;
+import io.spring.studycafe.applcation.studycafe.customer.CustomerTicketUseCommand;
 import io.spring.studycafe.applcation.studycafe.customer.CustomerTicketUpdateCommand;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
@@ -24,7 +24,7 @@ public class CustomerTicketEventListener {
 
     @Async
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
-    public void onCustomerTicketDeductTimeEventHandler(CustomerTicketTimeDeductionEvent event) {
-        customerService.deductTicketTime(new CustomerTicketTimeDeductionCommand(event.CustomerId(), event.timeInfo()));
+    public void onCustomerSeatUseEndEventHandler(CustomerSeatUseEndEvent event) {
+        customerService.useTicket(new CustomerTicketUseCommand(event.CustomerId(), event.timeInfo()));
     }
 }
