@@ -3,6 +3,7 @@ package io.spring.studycafe.batch;
 import io.spring.studycafe.domain.studycafe.customer.Customer;
 import io.spring.studycafe.domain.studycafe.customer.CustomerRepository;
 import io.spring.studycafe.domain.studycafe.seat.Seat;
+import io.spring.studycafe.domain.studycafe.seat.SeatManager;
 import io.spring.studycafe.domain.studycafe.seat.SeatRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -14,10 +15,12 @@ public class SeatExpirationValidationService {
 
     private final SeatRepository seatRepository;
     private final CustomerRepository customerRepository;
+    private final SeatManager seatManager;
 
-    public SeatExpirationValidationService(SeatRepository seatRepository, CustomerRepository customerRepository) {
+    public SeatExpirationValidationService(SeatRepository seatRepository, CustomerRepository customerRepository, SeatManager seatManager) {
         this.seatRepository = seatRepository;
         this.customerRepository = customerRepository;
+        this.seatManager = seatManager;
     }
 
     @Transactional
@@ -28,7 +31,7 @@ public class SeatExpirationValidationService {
 
             if (customer.hasNotTicket()) {
                 updateTicket(customer);
-                checkoutSeat(seat);
+                seatManager.checkout(seat.getId(), customer.getMemberId());
             }
 
         } catch (Exception e) {
@@ -38,10 +41,5 @@ public class SeatExpirationValidationService {
 
     private void updateTicket(Customer customer) {
         customerRepository.update(customer);
-    }
-
-    private void checkoutSeat(Seat seat) {
-        seat.empty();
-        seatRepository.update(seat);
     }
 }
