@@ -5,7 +5,6 @@ import io.spring.studycafe.domain.common.TimeInfo;
 import io.spring.studycafe.domain.studycafe.customer.customerticket.CustomerDefaultTicket;
 import io.spring.studycafe.domain.studycafe.customer.customerticket.CustomerTicket;
 import io.spring.studycafe.domain.studycafe.ticket.Ticket;
-import io.spring.studycafe.domain.studycafe.ticket.TicketType;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
@@ -51,7 +50,14 @@ public class Customer extends BaseModel {
         return customerTicket.isTicketExpired();
     }
 
-    public TicketType getTicketType() {
-        return customerTicket.getTicketType();
+    public boolean equals(Customer customer) {
+        if (customer == null) return false;
+        return this.id == customer.id;
     }
+
+    public boolean notEquals(Customer customer) {
+        return !this.equals(customer);
+    }
+
+
 }

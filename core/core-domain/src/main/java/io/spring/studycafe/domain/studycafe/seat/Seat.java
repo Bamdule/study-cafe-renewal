@@ -34,7 +34,11 @@ public class Seat {
      * 2. 사용한 시간 계산
      * 3. 빈 좌석 정보로 갱신
      */
-    public void leave() {
+    void empty(Customer customer) {
+        if (this.customer.notEquals(customer)) {
+            throw new SeatCustomerInvalidException(ExceptionCode.SEAT_CUSTOMER_INVALID);
+        }
+
         this.customer = null;
         this.seatUsageStartDateTime = null;
         this.state = SeatState.EMPTY;
@@ -49,7 +53,7 @@ public class Seat {
         return !this.isEmpty();
     }
 
-    public void assignTo(Customer customer) {
+    void assignTo(Customer customer) {
         if (this.isUsing()) {
             throw new SeatAlreadyInUseException(ExceptionCode.SEAT_ALREADY_IN_USE);
         }

@@ -4,6 +4,7 @@ import io.spring.studycafe.applcation.studycafe.seat.SeatInfo;
 import io.spring.studycafe.applcation.studycafe.seat.SeatService;
 import io.spring.studycafe.config.authorization.Authorization;
 import io.spring.studycafe.config.authorization.AuthorizationInfo;
+import io.spring.studycafe.domain.studycafe.seat.SeatCheckoutResult;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
@@ -36,19 +37,18 @@ public class SeatController {
         @PathVariable(value = "seatId") Long seatId,
         @Parameter(hidden = true) @Authorization AuthorizationInfo authorizationInfo
     ) {
-        SeatInfo seatInfo = seatService.useSeat(seatId, authorizationInfo.id());
+        SeatInfo seatInfo = seatService.checkIn(seatId, authorizationInfo.id());
 
         return ResponseEntity.ok(new SeatUsageResponse(seatInfo));
     }
 
     @PatchMapping("/{seatId}/leave")
-    public ResponseEntity<SeatLeaveResponse> leaveSeat(
+    public ResponseEntity<SeatCheckoutResponse> leaveSeat(
         @PathVariable(value = "seatId") Long seatId,
-        @RequestParam(value = "studyCafeId") Long studyCafeId,
         @Parameter(hidden = true) @Authorization AuthorizationInfo authorizationInfo
     ) {
-        SeatInfo seatInfo = seatService.leaveSeat(studyCafeId, seatId, authorizationInfo.id());
+        SeatCheckoutResult seatCheckOutResult = seatService.checkOut(seatId, authorizationInfo.id());
 
-        return ResponseEntity.ok(new SeatLeaveResponse(seatInfo));
+        return ResponseEntity.ok(new SeatCheckoutResponse(seatCheckOutResult));
     }
 }

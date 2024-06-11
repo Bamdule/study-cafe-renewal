@@ -28,7 +28,7 @@ public class SeatExpirationValidationService {
 
             if (customer.hasNotTicket()) {
                 updateTicket(customer);
-                leaveSeat(seat);
+                checkoutSeat(seat);
             }
 
         } catch (Exception e) {
@@ -40,8 +40,8 @@ public class SeatExpirationValidationService {
         customerRepository.update(customer);
     }
 
-    private void leaveSeat(Seat seat) {
-        seat.leave();
+    private void checkoutSeat(Seat seat) {
+        seat.empty();
         seatRepository.update(seat);
     }
 }

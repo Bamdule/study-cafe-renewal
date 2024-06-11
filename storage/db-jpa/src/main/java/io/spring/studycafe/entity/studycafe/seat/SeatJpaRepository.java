@@ -18,6 +18,6 @@ public interface SeatJpaRepository extends JpaRepository<SeatEntity, Long> {
     List<SeatEntity> findAllByState(SeatState state);
 
     @Lock(LockModeType.PESSIMISTIC_WRITE)
-    @Query("SELECT s FROM SeatEntity s JOIN FETCH s.customer sc WHERE s.id = :id")
+    @Query("SELECT s FROM SeatEntity s LEFT JOIN FETCH s.customer sc WHERE s.id = :id")
     Optional<SeatEntity> findWithPessimisticLockingById(Long id);
 }

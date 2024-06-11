@@ -18,6 +18,7 @@ public enum ExceptionCode {
     SEAT_EMPTY("빈 좌석 입니다.", HttpStatus.BAD_REQUEST),
     SEAT_NOT_FOUND("존재하지 않는 좌석입니다.", HttpStatus.NOT_FOUND),
     SEAT_INVALID("잘못된 좌석입니다.", HttpStatus.BAD_REQUEST),
+    SEAT_CUSTOMER_INVALID("좌석을 사용중인 고객이 아닙니다.", HttpStatus.BAD_REQUEST),
     SEAT_ONLY_ONE_USABLE("한 좌석만 사용할 수 있습니다.", HttpStatus.BAD_REQUEST),
 
     CARD_PAYMENT_METHOD_NOT_FOUND("존재하지 않는 카드 결제수단 입니다.", HttpStatus.NOT_FOUND),

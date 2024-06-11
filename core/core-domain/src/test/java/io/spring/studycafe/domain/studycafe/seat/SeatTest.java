@@ -134,7 +134,7 @@ class SeatTest {
         seat.assignTo(customer);
         TimeInfo usedTimeInfo = seat.getUsedTimeInfo();
 
-        seat.leave();
+        seat.empty(customer);
         Assertions.assertThat(usedTimeInfo).isNotNull();
         Assertions.assertThat(seat.isEmpty()).isTrue();
         Assertions.assertThat(seat.getSeatUsageStartDateTime()).isNull();
